@@ -20,9 +20,8 @@ TRAINING_PARAMS = {
     "do_eval":True, 
     "report_to":"wandb",
     "logging_strategy":"steps",         
-    "evaluation_strategy":"steps",      # 按步数评估
     "eval_steps":200,                   # 每 200 步评估一次
-    "logging_steps":10,                 # 每 10 步记录一次训练指标
+    "logging_steps":1,                 # 每 10 步记录一次训练指标
                              
 }
 MODEL_PARAMS = {
@@ -48,13 +47,13 @@ MODEL_PARAMS = {
 }
 DATASET_PARAMS={
     "dataset_name" : "mozilla-foundation/common_voice_17_0",  
-    "dataset_config_name" : "en",
+    "dataset_config_name" : "tr",
     "train_split" : "train+validation",
     "test_split" : "test",
     "chars_to_ignore" : ", ? . ! - ; : \" “ % ‘ ” � ' - ’",
     "text_column":'sentence',
     "audio_column":'audio',
-    "max_train_samples":50000,
+    "max_train_samples":45000,
     "max_eval_samples":5000,
     "max_duration_in_seconds":20.0,
     "min_duration_in_seconds":0.0,
