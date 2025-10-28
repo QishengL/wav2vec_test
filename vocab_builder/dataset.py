@@ -2,8 +2,7 @@
 import datasets
 import re
 from datasets import load_dataset
-from phonemizer.backend import BACKENDS
-from phonemizer.separator import Separator
+
 def load_datasets(**config):
     raw_datasets = datasets.DatasetDict()
 
@@ -21,9 +20,9 @@ def load_datasets(**config):
         trust_remote_code=True,
     )
     #need to debug
-    if config["max_train_samples"] is not None:
+    if "max_train_samples" in config:
         raw_datasets["train"] = raw_datasets["train"].select(range(config["max_train_samples"]))
-    if config["max_eval_samples"] is not None:
+    if "max_eval_samples" in config:
         raw_datasets["eval"] = raw_datasets["eval"].select(range(config["max_eval_samples"]))
     return raw_datasets
 
@@ -47,33 +46,7 @@ def preprocess_datasets(raw_datasets, **config):
 
     return raw_datasets.map(remove_special_characters, desc="Clean text")
 
-def preprocess_datasets_phoneme(raw_datasets,lan, **config):
-    # 示例：清理字符
-    backend = BACKENDS["espeak"](lan, language_switch="remove-flags")
-    chars_to_ignore = config["chars_to_ignore"]
-    if chars_to_ignore:
-        if isinstance(chars_to_ignore, str):
-            chars_to_ignore = chars_to_ignore.split()
-        chars_to_ignore_regex = f"[{''.join(re.escape(c) for c in chars_to_ignore)}]"
-    else:
-        chars_to_ignore_regex = None
 
-    def convert_phoneme(batch):
-        text = batch['sentence']
-        #print(text)
-        
-        separator = Separator(phone=' ', word="", syllable="")
-        phonemes = backend.phonemize(
-            [text],
-            separator=separator,
-        )
-        processed_text = phonemes[0].strip()
-        #print(processed_text)
-        #return
-        batch["target_text"] = processed_text
-        return batch
-
-    return raw_datasets.map(convert_phoneme,num_proc=1, desc="convert phoneme")
 
 
 
@@ -112,8 +85,6 @@ def vectorize_datasets(raw_datasets,tokenizer,feature_extractor, **config):
         #    additional_kwargs["phonemizer_lang"] = phoneme_language
 
         batch["labels"] = tokenizer(batch["target_text"], **additional_kwargs).input_ids
-        #print(batch["target_text"])
-        #print(batch["labels"])
         return batch
 
     

@@ -4,7 +4,16 @@ import evaluate
 import torch
 from collator import DataCollatorCTCWithPadding
 from transformers import AutoProcessor
+from accelerate import Accelerator
 def create_trainer(model, tokenizer, feature_extractor, dataset, training_args, eval_metrics):
+    
+    
+    #accelerator = Accelerator()
+    
+    # 确保训练参数正确设置
+    #training_args.ddp_find_unused_parameters = False
+    #training_args.remove_unused_columns = False
+
     # 定义评价指标
     #eval_metrics = {metric: evaluate.load(metric) for metric in ["wer"]}
     # Define evaluation metrics during training, *i.e.* word error rate, character error rate
