@@ -1,10 +1,10 @@
 # config_base.py
 create_vocab = True
 wandb_project = "wav2vec_test"
-wandb_run = "test1"
+wandb_run = "test2"
 preprocessing_only = False
 TRAINING_PARAMS = {
-    "output_dir": "../wav2vec2-common_voice-tr-demo", 
+    "output_dir": "../wav2vec2-common_voice-tr-demo2", 
     "overwrite_output_dir":True,        
     "num_train_epochs": 15,                                    
     "per_device_train_batch_size": 16,
@@ -20,13 +20,14 @@ TRAINING_PARAMS = {
     "do_eval":True, 
     "report_to":"wandb",
     "logging_strategy":"steps",         
-    "eval_steps":200,                   # 每 200 步评估一次
-    "logging_steps":1,                 # 每 10 步记录一次训练指标
+    "eval_strategy":"steps",
+    "eval_steps":400,                 # 每 1000 步评估一次
+    "logging_steps":1, 
                              
 }
 MODEL_PARAMS = {
-    "output_dir": "../wav2vec2-common_voice-en-demo", 
-    "model_name_or_path" : "facebook/wav2vec2-large-xlsr-53",
+    "output_dir": "../wav2vec2-common_voice-tr-demo2", 
+    "model_name_or_path" : "facebook/wav2vec2-xls-r-300m",
     "word_delimiter_token": "|",
     "unk_token": "[UNK]",
     "pad_token": "[PAD]",
@@ -50,10 +51,10 @@ DATASET_PARAMS={
     "dataset_config_name" : "tr",
     "train_split" : "train+validation",
     "test_split" : "test",
-    "chars_to_ignore" : ", ? . ! - ; : \" “ % ‘ ” � ' - ’",
+    "chars_to_ignore" : ", ( ) ? . ! - ; : \" “ % ‘ ” � ' - ’",
     "text_column":'sentence',
     "audio_column":'audio',
-    "max_train_samples":45000,
+    "max_train_samples":46405,
     "max_eval_samples":5000,
     "max_duration_in_seconds":20.0,
     "min_duration_in_seconds":0.0,

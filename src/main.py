@@ -6,14 +6,15 @@
 import importlib.util
 import argparse
 import sys
-from dataset import load_datasets, preprocess_datasets,vectorize_datasets,preprocess_datasets_phoneme
-from model import load_model_and_tokenizer
+from dataset import load_datasets, preprocess_datasets,vectorize_datasets
+from model import load_model_and_tokenizer,load_tokenzier
 from trainer import create_trainer
 from util import create_vocab
 from transformers import TrainingArguments, Trainer
 import logging
 from transformers.trainer_utils import is_main_process
 import transformers
+from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
 from transformers import (
     AutoConfig,
     AutoFeatureExtractor,
@@ -44,23 +45,7 @@ def load_config(config_path):
     spec.loader.exec_module(config_module)
     return config_module
 
-def preprocess_datasets2(raw_datasets):
-    # 示例：清理字符
-    backend = BACKENDS["espeak"]("tr", language_switch="remove-flags")
-    
-    
-    def phonemize_data(batch):
-        text = batch['sentence']
-        separator = Separator(phone=' ', word="", syllable="")
-        phonemes = backend.phonemize(
-            [text],
-            separator=separator,
-        )
-        processed_text = phonemes[0].strip()
-        print(processed_text)
-        batch["target_text"] = processed_text
-        return batch
-    return raw_datasets.map(phonemize_data, desc="Clean text")
+
 
 def main(config_path):
     os.environ["NCCL_P2P_DISABLE"] = "1"
@@ -70,7 +55,7 @@ def main(config_path):
     config = load_config(config_path)
 
     resume = getattr(config, 'resume', False)
-    
+    resume_dir = getattr(config, 'resume_dir', None)
 
     
     training_args = TrainingArguments(**config.TRAINING_PARAMS)
@@ -87,10 +72,7 @@ def main(config_path):
         f"Process rank: {training_args.local_process_index}, device: {training_args.device}, n_gpu: {training_args.n_gpu}, "
         f"distributed training: {training_args.parallel_mode.value == 'distributed'}, 16-bits training: {training_args.fp16}"
     )
-    # Set the verbosity to info of the Transformers logger (on main process only):
-    #if is_main_process(training_args.local_process_index):
-    #    transformers.utils.logging.set_verbosity_info()
-    #logger.info("Training/evaluation parameters %s", training_args)
+
     
     if training_args.local_rank in [-1, 0]:
         wandb.init(
@@ -103,34 +85,51 @@ def main(config_path):
     # Set seed before initializing model.
     set_seed(training_args.seed)
     
-    
-    raw_datasets = load_datasets(**config.DATASET_PARAMS)
-    
-    
-    #if config.MODEL_PARAMS['use_phoneme']:
-    #    with training_args.main_process_first(desc="dataset map special characters removal"):
-    #        raw_datasets = preprocess_datasets_phoneme(raw_datasets,"tr",**config.DATASET_PARAMS)
-    #else:
-        #with training_args.main_process_first(desc="dataset map special characters removal"):
-    raw_datasets = preprocess_datasets(raw_datasets,**config.DATASET_PARAMS)
-    #print(raw_datasets)
-    
-    #if config.create_vocab:
-    #    with training_args.main_process_first():
-    #        create_vocab(raw_datasets,**config.MODEL_PARAMS)
-
+    lan_config = config.DATASET_PARAMS["dataset_config_name"]
 
     tokenizer, feature_extractor, model, model_config = load_model_and_tokenizer(training_args,**config.MODEL_PARAMS)
+    if isinstance(lan_config, str):
+        tokenizer = load_tokenzier(lan_config,**config.MODEL_PARAMS)
+        raw_datasets = load_datasets(lan_config,**config.DATASET_PARAMS)
+        raw_datasets = preprocess_datasets(raw_datasets,**config.DATASET_PARAMS)
+        with training_args.main_process_first(desc="dataset map preprocessing"):
+            vectorized_datasets = vectorize_datasets(raw_datasets,tokenizer,feature_extractor,**config.DATASET_PARAMS)
+            vectorized_datasets["train"] = vectorized_datasets["train"].add_column("language", [lan_config] * len(vectorized_datasets["train"]))
+            vectorized_datasets["eval"] = vectorized_datasets["eval"].add_column("language", [lan_config] * len(vectorized_datasets["eval"]))
+    else:
+        all_train_datasets = []
+        all_eval_datasets = []
+        for lan in lan_config:
+            print(lan)
+            tokenizer = load_tokenzier(lan,**config.MODEL_PARAMS)
+            raw_datasets = load_datasets(lan,**config.DATASET_PARAMS)
+            raw_datasets = preprocess_datasets(raw_datasets,**config.DATASET_PARAMS)
+            with training_args.main_process_first(desc="dataset map preprocessing"):
+                vectorized_datasets = vectorize_datasets(raw_datasets,tokenizer,feature_extractor,**config.DATASET_PARAMS)
+                vectorized_datasets["train"] = vectorized_datasets["train"].add_column("language", [lan] * len(vectorized_datasets["train"]))
+                vectorized_datasets["eval"] = vectorized_datasets["eval"].add_column("language", [lan] * len(vectorized_datasets["eval"]))
+            
+            # 把每次得到的vectorized_datasets合并到一起
+            all_train_datasets.append(vectorized_datasets["train"])
+            all_eval_datasets.append(vectorized_datasets["eval"])
+        
+        # 合并所有语言的数据集
+        from datasets import concatenate_datasets, DatasetDict
+        vectorized_datasets = DatasetDict({
+            "train": concatenate_datasets(all_train_datasets).shuffle(seed=42),
+            "eval": concatenate_datasets(all_eval_datasets)
+        })
+    
+
+    
     
     #print(tokenizer)
     #print(feature_extractor)
     #print(model)
     
-    with training_args.main_process_first(desc="dataset map preprocessing"):
-        vectorized_datasets = vectorize_datasets(raw_datasets,tokenizer,feature_extractor,**config.DATASET_PARAMS)
+    
     #return
     #print(vectorized_datasets)
-
     
 
     # for large datasets it is advised to run the preprocessing on a
@@ -145,7 +144,7 @@ def main(config_path):
     
     
 
-    #if resume == False:
+    
 
         # Now save everything to be able to create a single processor later
         # make sure all processes wait until data is saved
@@ -164,8 +163,14 @@ def main(config_path):
         # use last checkpoint if exist   
         
         if resume:
-            train_result = trainer.train(resume_from_checkpoint=True)
+            if resume_dir == None:
+                logger.info(f"resume from latest checkpoints in output file")
+                train_result = trainer.train(resume_from_checkpoint=True)
+            else:
+                logger.info(f"resume from {resume_dir}")
+                train_result = trainer.train(resume_from_checkpoint=resume_dir)
         else:
+            logger.info(f"train from beginning")
             train_result = trainer.train(resume_from_checkpoint=None)
         trainer.save_model()
 
@@ -185,7 +190,12 @@ def main(config_path):
     results = {}
     if training_args.do_eval:
         logger.info("*** Evaluate ***")
-        
+        if training_args.do_train == False:
+            if resume_dir:
+                logger.info(f"resume from {resume_dir}")
+                model = Wav2Vec2ForCTC.from_pretrained(resume_dir)
+                processor = Wav2Vec2Processor.from_pretrained(resume_dir)
+                trainer = create_trainer(model, tokenizer, feature_extractor, vectorized_datasets, training_args, config.DATASET_PARAMS["eval_metrics"], processor)
         metrics = trainer.evaluate()
         max_eval_samples = (
             config.DATASET_PARAMS["max_eval_samples"] if config.DATASET_PARAMS["max_eval_samples"] is not None else len(vectorized_datasets["eval"])

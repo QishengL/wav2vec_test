@@ -1,7 +1,7 @@
-subfolder = "cv_tr_phoneme"
+subfolder = "cv_uk_ro_phoneme"
 DATASET_PARAMS={
     "dataset_name" : "fixie-ai/common_voice_17_0",  
-    "dataset_config_name" : "tr",
+    "dataset_config_name" : ["ro","uk"],
     "output_dir" : f"./vocab_folder/{subfolder}",
     "train_split" : "train+validation",
     "test_split" : "test",
@@ -12,6 +12,6 @@ DATASET_PARAMS={
     "unk_token": "[UNK]",
     "pad_token": "[PAD]",
     "use_phoneme":True,
-    "phoneme_lang":"tr",
+    "cache_dir":"/mnt/storage/ldl_linguistics/datasets",
 
 }

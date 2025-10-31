@@ -4,21 +4,23 @@ import re
 from datasets import load_dataset
 from phonemizer.backend import BACKENDS
 from phonemizer.separator import Separator
-def load_datasets(**config):
+def load_datasets(lan,**config):
     raw_datasets = datasets.DatasetDict()
 
     raw_datasets["train"] = load_dataset(
         config["dataset_name"],
-        config["dataset_config_name"],
+        lan,
         split=config["train_split"],
         trust_remote_code=True,
+        cache_dir=config["cache_dir"],
     )
 
     raw_datasets["eval"] = load_dataset(
         config["dataset_name"],
-        config["dataset_config_name"],
+        lan,
         split=config["test_split"],
         trust_remote_code=True,
+        cache_dir=config["cache_dir"],
     )
     #need to debug
     if config["max_train_samples"] is not None:
@@ -134,5 +136,4 @@ def vectorize_datasets(raw_datasets,tokenizer,feature_extractor, **config):
         input_columns=["input_length"],
     )
     return vectorized_datasets
-
     

@@ -2,7 +2,50 @@
 from transformers import AutoConfig, AutoTokenizer, AutoFeatureExtractor, AutoModelForCTC, Wav2Vec2PhonemeCTCTokenizer
 from phonemizer.backend import BACKENDS
 
+def load_tokenzier(phonemizer_lang,**model_config):
+    use_phoneme = model_config.get("use_phoneme", False)
+    word_delimiter_token = model_config.get("word_delimiter_token", " ")
+    unk_token = model_config.get("unk_token", "[UNK]")
+    pad_token = model_config.get("pad_token", "[PAD]")
+    output_dir = model_config.get("output_dir", "./output")
+    model_name = model_config.get("model_name_or_path", "facebook/wav2vec2-base")
+    vocab_dir = model_config.get("vocab_dir", output_dir)
+    config = AutoConfig.from_pretrained(
+        model_name,
+        #cache_dir=model_args.cache_dir,
+        #token=None,
+        trust_remote_code=True,
+    )
     
+
+    tokenizer_kwargs = {
+        "config": config if config.tokenizer_class is not None else None,
+        "tokenizer_type": (config.model_type if config.tokenizer_class is None else None),
+        "unk_token": unk_token,
+        "pad_token": pad_token,
+        "word_delimiter_token": word_delimiter_token,
+    }
+
+    tokenizer_name_or_path = vocab_dir
+    #print(tokenizer_name_or_path)
+    if use_phoneme:
+        print("phonewav!")
+        tokenizer = Wav2Vec2PhonemeCTCTokenizer.from_pretrained(
+                tokenizer_name_or_path,
+                unk_token=unk_token,
+                pad_token=pad_token,
+                phonemizer_lang=phonemizer_lang,
+            )
+        #backend = BACKENDS["espeak"](phoneme_lang, language_switch="remove-flags")
+        #tokenizer.backend = backend
+    else:
+        tokenizer = AutoTokenizer.from_pretrained(
+            tokenizer_name_or_path,
+            #token=data_args.token,
+            #trust_remote_code=True,
+            **tokenizer_kwargs,
+        )
+    return tokenizer    
 
 def load_model_and_tokenizer(training_args,**model_config):
     # load config
@@ -53,7 +96,7 @@ def load_model_and_tokenizer(training_args,**model_config):
                 tokenizer_name_or_path,
                 unk_token=unk_token,
                 pad_token=pad_token,
-                phonemizer_lang=phoneme_lang,
+                #phonemizer_lang='uk',
             )
         #backend = BACKENDS["espeak"](phoneme_lang, language_switch="remove-flags")
         #tokenizer.backend = backend
