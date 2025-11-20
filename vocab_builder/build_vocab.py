@@ -21,6 +21,7 @@ def create_vocabulary_from_data_multilingual(
         all_phonemes = []
         all_texts = []
         
+        
         # 按语言分组处理
         if "language" in batch:
             # 按语言分组
@@ -46,7 +47,8 @@ def create_vocabulary_from_data_multilingual(
                         separator=separator,
                     )
                     phonemized_text = phonemes[0].strip()
-                    all_phonemes.extend(phonemized_text.split(" "))
+                    all_phonemes = [p for p in phonemized_text.split(" ") if p != ""]
+                    #all_phonemes.extend(phonemized_text.split(" "))
                     all_texts.append(phonemized_text)
 
                 else:
@@ -68,7 +70,9 @@ def create_vocabulary_from_data_multilingual(
                         separator=separator,
                     )
                     phonemized_text = phonemes[0].strip()
-                    all_phonemes = phonemized_text.split(" ")
+                    all_phonemes = [p for p in phonemized_text.split(" ") if p != ""]
+                    #all_phonemes = phonemized_text.split(" ")
+                    
                     all_texts = [phonemized_text]
                 except Exception as e:
                     print(f"Warning: Failed to phonemize with default language: {e}")
@@ -119,6 +123,11 @@ def create_vocabulary_from_data_multilingual(
             # 如果空格不在词汇表中，直接添加分隔符
         #    vocab_dict[word_delimiter_token] = len(vocab_dict)
 
+
+
+    
+
+
     return vocab_dict
 
 
@@ -138,7 +147,7 @@ def create_vocabulary_from_data(
         backend = BACKENDS["espeak"](language, language_switch="remove-flags")
         all_text = " ".join(batch["target_text"])
 
-        
+        phoneme_counter = {} 
         separator = Separator(phone=' ', word="", syllable="")
         if use_phoneme:
             # 使用音素化处理文本
@@ -151,15 +160,17 @@ def create_vocabulary_from_data(
             #print(phonemes)
             #phonemes = phonemized_text.split(" ")
                 # 过滤空字符串
-            phonemes = [p for p in phonemized_text.split(" ") if p != ""]
             
+            phonemes = [p for p in phonemized_text.split(" ") if p != ""]
+            for phoneme in phonemes:
+                phoneme_counter[phoneme] = phoneme_counter.get(phoneme, 0) + 1
             
             vocab = list(set(phonemes))
             
                 
             
             #print(set(vocab))
-            return {"vocab": [vocab], "all_text": [phonemized_text]}
+            return {"vocab": [vocab], "all_text": [phonemized_text],"phoneme_counts": [phoneme_counter]}
 
         else:
             # 原始字符处理
@@ -205,9 +216,30 @@ def create_vocabulary_from_data(
             # 如果空格不在词汇表中，直接添加分隔符
         #    vocab_dict[word_delimiter_token] = len(vocab_dict)
 
-    
+    # 分别处理训练集和测试集的计数
+    train_counts = {}
+    eval_counts = {}
+    total_counts = {}
 
-    return vocab_dict
+    # 假设 vocabs 的顺序是：训练集在前，测试集在后
+    dataset_names = list(vocabs.keys())  # 通常是 ['train', 'eval'] 或 ['train', 'test']
+
+    for i, (dataset_name, vocab_data) in enumerate(vocabs.items()):
+        for count_dict in vocab_data["phoneme_counts"]:
+            for phoneme, count in count_dict.items():
+                # 更新总计数
+                total_counts[phoneme] = total_counts.get(phoneme, 0) + count
+                
+                # 根据数据集名称分别计数
+                if dataset_name == "train":
+                    train_counts[phoneme] = train_counts.get(phoneme, 0) + count
+                elif dataset_name == "eval":
+                    eval_counts[phoneme] = eval_counts.get(phoneme, 0) + count
+    sorted_train_counts = dict(sorted(train_counts.items(), key=lambda x: x[1], reverse=True))
+    sorted_eval_counts = dict(sorted(eval_counts.items(), key=lambda x: x[1], reverse=True))
+    sorted_total_counts = dict(sorted(total_counts.items(), key=lambda x: x[1], reverse=True))
+
+    return vocab_dict,sorted_train_counts,sorted_eval_counts,sorted_total_counts
 
 
 
@@ -237,10 +269,14 @@ def create_vocab(raw_datasets,**model_config):
             # two processes try to delete the vocab file at the some time
             pass
     
+    sorted_train_counts={}
+    sorted_eval_counts={}
+    sorted_total_counts={}
+
     if not os.path.isfile(vocab_file):
         os.makedirs(tokenizer_name_or_path, exist_ok=True)
         if isinstance(model_config['dataset_config_name'], str):
-            vocab_dict = create_vocabulary_from_data(
+            vocab_dict,sorted_train_counts,sorted_eval_counts,sorted_total_counts = create_vocabulary_from_data(
                 raw_datasets,
                 model_config['use_phoneme'],
                 model_config['phoneme_lang'],
@@ -248,6 +284,21 @@ def create_vocab(raw_datasets,**model_config):
                 unk_token=unk_token,
                 pad_token=pad_token,
             )
+                # 保存训练集计数
+            train_count_file = os.path.join(tokenizer_name_or_path, "counts_train.json")
+            with open(train_count_file, "w", encoding="utf-8") as f:
+                json.dump(sorted_train_counts, f, ensure_ascii=False, indent=2)
+            
+            # 保存验证集计数
+            eval_count_file = os.path.join(tokenizer_name_or_path, "counts_eval.json")
+            with open(eval_count_file, "w", encoding="utf-8") as f:
+                json.dump(sorted_eval_counts, f, ensure_ascii=False, indent=2)
+            
+            # 保存总计数
+            total_count_file = os.path.join(tokenizer_name_or_path, "counts_total.json")
+            with open(total_count_file, "w", encoding="utf-8") as f:
+                json.dump(sorted_total_counts, f, ensure_ascii=False, indent=2)
+
         else:
             languages = None
             if "language" in raw_datasets["train"].column_names:
@@ -269,4 +320,6 @@ def create_vocab(raw_datasets,**model_config):
 
         # save vocab dict to be loaded into tokenizer
         with open(vocab_file, "w") as file:
-            json.dump(vocab_dict, file)
+            json.dump(vocab_dict, file,ensure_ascii=False, indent=2)
+
+        

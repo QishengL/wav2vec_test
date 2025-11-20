@@ -64,3 +64,27 @@ class DataCollatorCTCWithPadding:
             batch["attention_mask"] = batch["attention_mask"].to(torch.long)
 
         return batch
+
+class AudioClassificationDataCollator:
+    def __init__(self, feature_extractor):
+        self.feature_extractor = feature_extractor
+    
+    def __call__(self, features):
+        # 提取输入特征 - Wav2Vec2ForSequenceClassification 需要 input_values
+        input_features = [{"input_values": feature["input_values"]} for feature in features]
+        
+        # 提取标签
+        labels = [feature["labels"] for feature in features]
+        
+        # 使用特征提取器处理填充
+        batch = self.feature_extractor.pad(
+            input_features,
+            padding=True,
+            return_tensors="pt",
+        )
+        
+        # 添加标签
+        batch["labels"] = torch.tensor(labels, dtype=torch.long)
+        
+        return batch
+

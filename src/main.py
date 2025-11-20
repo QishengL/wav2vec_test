@@ -1,14 +1,11 @@
 # main.py
-
-
-
-
 import importlib.util
 import argparse
 import sys
 from dataset import load_datasets, preprocess_datasets,vectorize_datasets
 from model import load_model_and_tokenizer,load_tokenzier
 from trainer import create_trainer
+from peft import LoraConfig
 from util import create_vocab
 from transformers import TrainingArguments, Trainer
 import logging
@@ -56,8 +53,10 @@ def main(config_path):
 
     resume = getattr(config, 'resume', False)
     resume_dir = getattr(config, 'resume_dir', None)
-
-    
+    random = getattr(config, 'random', None)
+    espeak_config = getattr(config, 'espeak_config', None)
+    sample_limit_list = config.DATASET_PARAMS.get('max_train_samples_per_language', [])
+    eval_limit_list = config.DATASET_PARAMS.get('max_eval_samples_per_language', [])
     training_args = TrainingArguments(**config.TRAINING_PARAMS)
     # Setup logging
     logging.basicConfig(
@@ -89,8 +88,16 @@ def main(config_path):
 
     tokenizer, feature_extractor, model, model_config = load_model_and_tokenizer(training_args,**config.MODEL_PARAMS)
     if isinstance(lan_config, str):
-        tokenizer = load_tokenzier(lan_config,**config.MODEL_PARAMS)
-        raw_datasets = load_datasets(lan_config,**config.DATASET_PARAMS)
+        if len(sample_limit_list) == 0:
+            sample_limit_list.append(None)
+        if len(eval_limit_list) == 0:
+            eval_limit_list.append(None)
+        if espeak_config is not None:
+            print(espeak_config)
+            tokenizer = load_tokenzier(espeak_config,**config.MODEL_PARAMS)
+        else:
+            tokenizer = load_tokenzier(lan_config,**config.MODEL_PARAMS)
+        raw_datasets = load_datasets(lan_config,max_train_sample=sample_limit_list[0],max_eval_sample=eval_limit_list[0],random=random,**config.DATASET_PARAMS)
         raw_datasets = preprocess_datasets(raw_datasets,**config.DATASET_PARAMS)
         with training_args.main_process_first(desc="dataset map preprocessing"):
             vectorized_datasets = vectorize_datasets(raw_datasets,tokenizer,feature_extractor,**config.DATASET_PARAMS)
@@ -99,15 +106,19 @@ def main(config_path):
     else:
         all_train_datasets = []
         all_eval_datasets = []
-        for lan in lan_config:
-            print(lan)
-            tokenizer = load_tokenzier(lan,**config.MODEL_PARAMS)
-            raw_datasets = load_datasets(lan,**config.DATASET_PARAMS)
+        print(sample_limit_list)
+        if len(sample_limit_list) == 0:
+            for idx in range(len(lan_config)):
+                sample_limit_list.append(None)
+        for idx in range(len(lan_config)):
+            print(lan_config[idx])
+            tokenizer = load_tokenzier(lan_config[idx],**config.MODEL_PARAMS)
+            raw_datasets = load_datasets(lan_config[idx],max_train_sample=sample_limit_list[idx],**config.DATASET_PARAMS)
             raw_datasets = preprocess_datasets(raw_datasets,**config.DATASET_PARAMS)
             with training_args.main_process_first(desc="dataset map preprocessing"):
                 vectorized_datasets = vectorize_datasets(raw_datasets,tokenizer,feature_extractor,**config.DATASET_PARAMS)
-                vectorized_datasets["train"] = vectorized_datasets["train"].add_column("language", [lan] * len(vectorized_datasets["train"]))
-                vectorized_datasets["eval"] = vectorized_datasets["eval"].add_column("language", [lan] * len(vectorized_datasets["eval"]))
+                vectorized_datasets["train"] = vectorized_datasets["train"].add_column("language", [lan_config[idx]] * len(vectorized_datasets["train"]))
+                vectorized_datasets["eval"] = vectorized_datasets["eval"].add_column("language", [lan_config[idx]] * len(vectorized_datasets["eval"]))
             
             # 把每次得到的vectorized_datasets合并到一起
             all_train_datasets.append(vectorized_datasets["train"])

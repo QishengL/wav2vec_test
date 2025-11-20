@@ -72,8 +72,10 @@ def load_datasets(**config):
 
 def preprocess_datasets(raw_datasets, **config):
     def clean_text(batch):
-        text = batch[config["text_column"]]
-        batch["target_text"] = ' '.join(text.lower().split()) 
+        batch["target_text"] = batch[config["text_column"]]
+        
+        #text = batch[config["text_column"]]
+        #batch["target_text"] = ' '.join(text.lower().split()) 
         # 直接转换为小写并添加空格
         #batch["target_text"] = text.lower() + " "
         return batch

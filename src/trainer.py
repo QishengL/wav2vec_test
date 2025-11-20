@@ -2,9 +2,10 @@
 from transformers import Trainer, TrainingArguments
 import evaluate
 import torch
-from collator import DataCollatorCTCWithPadding
+from collator import DataCollatorCTCWithPadding,AudioClassificationDataCollator
 from transformers import AutoProcessor
 from accelerate import Accelerator
+import numpy as np
 import wandb
 class MultiLanguageEvaluationTrainer(Trainer):
     def __init__(self, *args, language_column="language", languages=None, **kwargs):
@@ -139,10 +140,10 @@ def create_trainer(model, tokenizer, feature_extractor, dataset, training_args,e
         pred.label_ids[pred.label_ids == -100] = tokenizer.pad_token_id
 
         pred_str = tokenizer.batch_decode(pred_ids)
-        print(f"pred:{pred_str}")
+        #print(f"pred:{pred_str}")
         # we do not want to group tokens when computing the metrics
         label_str = tokenizer.batch_decode(pred.label_ids, group_tokens=False)
-        print(f"label:{label_str}")
+        #print(f"label:{label_str}")
         metrics = {k: v.compute(predictions=pred_str, references=label_str) for k, v in eval_metrics.items()}
 
         return metrics
@@ -180,4 +181,35 @@ def create_trainer(model, tokenizer, feature_extractor, dataset, training_args,e
         preprocess_logits_for_metrics=preprocess_logits_for_metrics,
     )
     '''
+    return trainer
+
+def create_trainer_for_classification(model, feature_extractor, dataset, training_args, eval_metrics, processor=None):
+    
+    # 对于分类任务，我们使用准确率等标准分类指标
+    # eval_metrics 现在应该是 ["accuracy", "f1"] 等分类指标
+    eval_metrics = {metric: evaluate.load(metric) for metric in eval_metrics}
+    def compute_metrics(pred):
+        preds = pred.predictions
+        labels = pred.label_ids
+        
+        if preds.ndim == 2:  # 单标签分类
+            preds = np.argmax(preds, axis=1)
+        else:  # 多标签分类或其他情况
+            preds = np.argmax(preds, axis=-1)
+            
+        metrics = {k: v.compute(predictions=preds, references=labels) for k, v in eval_metrics.items()}               
+        return metrics
+    data_collator = AudioClassificationDataCollator(
+        feature_extractor = feature_extractor
+    )
+    # 使用标准的 Trainer
+    trainer = Trainer(
+        model=model,
+        data_collator=data_collator,
+        args=training_args,
+        compute_metrics=compute_metrics,
+        train_dataset=dataset["train"] if training_args.do_train else None,
+        eval_dataset=dataset["eval"] if training_args.do_eval else None,
+    )
+    
     return trainer
