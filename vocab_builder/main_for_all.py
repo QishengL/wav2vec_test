@@ -7,12 +7,20 @@ import argparse
 #config_lang = ['ar', 'be', 'bg', 'bn', 'cs', 'cy', 'da', 'de', 'el', 'es', 'et', 'fa', 'fi', 'hi', 'hu', 'it', 'ja', 'ka', 'ko', 'lt', 'lv', 'mk', 'ml', 'mn', 'mr', 'nl', 'pl', 'pt', 'ro', 'ru', 'sk', 'sl', 'sr', 'sw', 'ta', 'te', 'th', 'tr', 'uk', 'ur', 'vi','en','fr']
 backend_lang = ['hu', 'it', 'ja', 'ka', 'ko', 'lt', 'lv', 'mk', 'ml', 'mn', 'mr', 'nl', 'pl', 'pt', 'ro', 'ru', 'sk', 'sl', 'sr', 'sw', 'ta', 'te', 'th', 'tr', 'uk', 'ur', 'vi','en-us','fr-fr']
 config_lang = ['hu', 'it', 'ja', 'ka', 'ko', 'lt', 'lv', 'mk', 'ml', 'mn', 'mr', 'nl', 'pl', 'pt', 'ro', 'ru', 'sk', 'sl', 'sr', 'sw', 'ta', 'te', 'th', 'tr', 'uk', 'ur', 'vi','en','fr']
-for idx in range(len(backend_lang)):
-    backend_lan = backend_lang[idx]
-    config_lan = config_lang[idx]
+
+lan_list = ['ar', 'ba', 'eu', 'be', 'bn', 'ca', 'yue', 'cs', 'nl', 'en', 'eo', 'fa', 'fr', 'ka', 'de', 'hu', 'it', 'ja', 'lv', 'lt', 'pl', 'pt', 'ro', 'ru', 'uk', 'es', 'sw', 'ta', 'th', 'tt', 'tr', 'ug', 'ur', 'uz', 'cy','zh-CN']
+already_saved = ['ar', 'be', 'bg', 'bn', 'cs', 'cy', 'da', 'de', 'el', 'es', 'et', 'fa', 'fi', 'hi', 'hu', 'it', 'ja', 'ka', 'ko', 'lt', 'lv', 'mk', 'ml', 'mn', 'mr', 'nl', 'pl', 'pt', 'ro', 'ru', 'sk', 'sl', 'sr', 'sw', 'ta', 'te', 'th', 'tr', 'uk', 'ur', 'vi','en','fr']
+
+
+    
+for idx in range(len(lan_list)):
+    backend_lan = lan_list[idx]
+    config_lan = lan_list[idx]
+    if backend_lan in already_saved:
+        continue
     subfolder = f"cv_{config_lan}_phoneme"
     DATASET_PARAMS={
-        "dataset_name" : "fixie-ai/common_voice_17_0",  
+        "dataset_name" : "fsicoli/common_voice_22_0",  
         "dataset_config_name" : config_lan,
         "output_dir" : f"./vocab_folder/{subfolder}",
         "train_split" : "train+validation",

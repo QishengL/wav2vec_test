@@ -114,7 +114,7 @@ def main():
         print(f"  {idx:3d}: '{phoneme}'")
     
     # 4. 保存到文件
-    output_file = "general_vocab.json"
+    output_file = "general_vocab_new.json"
     save_vocab(general_vocab, output_file)
 
 if __name__ == "__main__":

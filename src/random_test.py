@@ -53,7 +53,7 @@ def main(config_path):
     
     
 
-    trainer = create_trainer_for_classification(model, feature_extractor, vectorized_datasets, training_args, config.DATASET_PARAMS["eval_metrics"])
+    trainer = create_trainer_for_classification(model, feature_extractor, vectorized_datasets, training_args, config.DATASET_PARAMS["eval_metrics"],languages)
     trainer.train(resume_from_checkpoint=None)
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

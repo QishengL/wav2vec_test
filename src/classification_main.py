@@ -86,10 +86,10 @@ def main(config_path):
     
     # 加载模型和特征提取器（不再需要tokenizer）
     feature_extractor, model, model_config = load_model_for_classification(training_args, **config.MODEL_PARAMS)
-    languages = lan_dict = {code: idx for idx, code in enumerate(config.lan_list)}
+    languages_dict =  {code: idx for idx, code in enumerate(config.lan_list)}
     # 加载多语言数据集
     raw_datasets = load_and_combine_multilingual_datasets(
-        languages=languages,
+        languages=languages_dict,
         max_train_sample=config.train_samples,  # 每种语言250条训练数据
         max_eval_sample=config.eval_samples,    # 每种语言50条验证数据
         random=training_args.seed,
@@ -122,7 +122,7 @@ def main(config_path):
             feature_extractor.save_pretrained(training_args.output_dir)
             model_config.save_pretrained(training_args.output_dir)
     
-    trainer = create_trainer_for_classification(model, feature_extractor, vectorized_datasets, training_args, config.DATASET_PARAMS["eval_metrics"])
+    trainer = create_trainer_for_classification(model, feature_extractor, vectorized_datasets, training_args, config.DATASET_PARAMS["eval_metrics"],languages_dict)
     # Training
     if training_args.do_train:
         # use last checkpoint if exist   

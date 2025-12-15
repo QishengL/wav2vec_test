@@ -183,21 +183,49 @@ def create_trainer(model, tokenizer, feature_extractor, dataset, training_args,e
     '''
     return trainer
 
-def create_trainer_for_classification(model, feature_extractor, dataset, training_args, eval_metrics, processor=None):
+def create_trainer_for_classification(model, feature_extractor, dataset, training_args, eval_metrics,language_dict, processor=None):
     
     # 对于分类任务，我们使用准确率等标准分类指标
     # eval_metrics 现在应该是 ["accuracy", "f1"] 等分类指标
     eval_metrics = {metric: evaluate.load(metric) for metric in eval_metrics}
+    label_to_code = {v: k for k, v in language_dict.items()}
+
     def compute_metrics(pred):
         preds = pred.predictions
         labels = pred.label_ids
         
-        if preds.ndim == 2:  # 单标签分类
+        # 获取预测结果
+        if preds.ndim == 2:
             preds = np.argmax(preds, axis=1)
-        else:  # 多标签分类或其他情况
+        else:
             preds = np.argmax(preds, axis=-1)
+        
+        accuracy_metric = evaluate.load("accuracy")
+        unique_langs = np.unique(labels)
+        metrics = {}
+        total_samples = len(labels)
+        
+        # 整体准确率
+        overall_acc = accuracy_metric.compute(predictions=preds, references=labels)["accuracy"]
+        metrics["overall_accuracy"] = overall_acc
+        
+        # 按语言分组计算
+        weighted_sum = 0
+        for lang in unique_langs:
+            lang_mask = labels == lang
+            lang_count = lang_mask.sum()
             
-        metrics = {k: v.compute(predictions=preds, references=labels) for k, v in eval_metrics.items()}               
+            if lang_count > 0:
+                lang_acc = accuracy_metric.compute(
+                    predictions=preds[lang_mask], 
+                    references=labels[lang_mask]
+                )["accuracy"]
+                lang_code = label_to_code[lang]
+                metrics[f"{lang_code}/accuracy"] = lang_acc
+                weighted_sum += lang_acc * lang_count
+        
+        
+        
         return metrics
     data_collator = AudioClassificationDataCollator(
         feature_extractor = feature_extractor
