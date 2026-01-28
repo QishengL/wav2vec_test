@@ -84,26 +84,25 @@ def main(config_path):
     # Set seed before initializing model.
     set_seed(training_args.seed)
     
-    # 加载模型和特征提取器（不再需要tokenizer）
+    # load model
     feature_extractor, model, model_config = load_model_for_classification(training_args, **config.MODEL_PARAMS)
     languages_dict =  {code: idx for idx, code in enumerate(config.lan_list)}
-    # 加载多语言数据集
+    # load multilan dataset
     raw_datasets = load_and_combine_multilingual_datasets(
         languages=languages_dict,
-        max_train_sample=config.train_samples,  # 每种语言250条训练数据
-        max_eval_sample=config.eval_samples,    # 每种语言50条验证数据
+        max_train_sample=config.train_samples,  # 
+        max_eval_sample=config.eval_samples,    # 
         random=training_args.seed,
         **config.DATASET_PARAMS
     )
 
-    # 预处理数据集（如果需要的话）
-    #raw_datasets = preprocess_datasets(raw_datasets, **config.DATASET_PARAMS)
+    
 
-    # 向量化数据集 - 不再需要tokenizer
+    # vectorize
     with training_args.main_process_first(desc="dataset map preprocessing"):
         vectorized_datasets = vectorize_datasets_classification(
             raw_datasets, 
-            tokenizer=None,  # 传入None或者删除这个参数
+            tokenizer=None,  # 
             feature_extractor=feature_extractor, 
             **config.DATASET_PARAMS
         )

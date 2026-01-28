@@ -72,11 +72,7 @@ class MultiLanguageEvaluationTrainer(Trainer):
                 # 累加样本数
                 total_samples += lang_samples
         
-        #print("--------------")
-        #print("简化后的指标:", all_lang_metrics)
-        #print("语言:", self.languages)
-        #print("总样本数:", total_samples)
-        #print("--------------")
+
         
         # 计算加权平均指标
         weighted_metrics = self._compute_weighted_average(all_lang_metrics, self.languages, total_samples)
@@ -89,7 +85,7 @@ class MultiLanguageEvaluationTrainer(Trainer):
         """计算加权平均指标 - 使用简化后的名称"""
         weighted_metrics = {}
         
-        for metric in ['wer', 'loss']:  # 根据您实际有的指标调整
+        for metric in ['wer', 'loss']:  
             weighted_sum = 0
             valid_langs = 0
             
@@ -101,11 +97,11 @@ class MultiLanguageEvaluationTrainer(Trainer):
                     lang_value = lang_metrics[lang_metric_key]
                     lang_samples = lang_metrics[lang_samples_key]
                     
-                    # 加权累加
+                    
                     weighted_sum += lang_value * lang_samples
                     valid_langs += 1
             
-            # 计算加权平均
+            
             if valid_langs > 0 and total_samples > 0:
                 weighted_avg = weighted_sum / total_samples
                 weighted_metrics[metric] = weighted_avg
@@ -119,16 +115,7 @@ class MultiLanguageEvaluationTrainer(Trainer):
 def create_trainer(model, tokenizer, feature_extractor, dataset, training_args,eval_metrics, processor=None):
     
     
-    #accelerator = Accelerator()
-    
-    # 确保训练参数正确设置
-    #training_args.ddp_find_unused_parameters = False
-    #training_args.remove_unused_columns = False
 
-    # 定义评价指标
-    #eval_metrics = {metric: evaluate.load(metric) for metric in ["wer"]}
-    # Define evaluation metrics during training, *i.e.* word error rate, character error rate
-    # cache_dir can be added here
     eval_metrics = {metric: evaluate.load(metric) for metric in eval_metrics}
 
     def preprocess_logits_for_metrics(logits, labels):
@@ -194,7 +181,7 @@ def create_trainer_for_classification(model, feature_extractor, dataset, trainin
         preds = pred.predictions
         labels = pred.label_ids
         
-        # 获取预测结果
+        
         if preds.ndim == 2:
             preds = np.argmax(preds, axis=1)
         else:
@@ -205,11 +192,11 @@ def create_trainer_for_classification(model, feature_extractor, dataset, trainin
         metrics = {}
         total_samples = len(labels)
         
-        # 整体准确率
+        
         overall_acc = accuracy_metric.compute(predictions=preds, references=labels)["accuracy"]
         metrics["overall_accuracy"] = overall_acc
         
-        # 按语言分组计算
+        
         weighted_sum = 0
         for lang in unique_langs:
             lang_mask = labels == lang
@@ -230,7 +217,7 @@ def create_trainer_for_classification(model, feature_extractor, dataset, trainin
     data_collator = AudioClassificationDataCollator(
         feature_extractor = feature_extractor
     )
-    # 使用标准的 Trainer
+    
     trainer = Trainer(
         model=model,
         data_collator=data_collator,

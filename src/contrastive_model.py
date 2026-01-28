@@ -72,14 +72,14 @@ class Wav2Vec2ForContrastiveLearning(Wav2Vec2PreTrainedModel):
         
         self.wav2vec2 = Wav2Vec2Model(config)
         
-        # 投影头 - 参照官方结构
+        # projector - 
         self.projector = nn.Sequential(
             nn.Linear(config.hidden_size, config.hidden_size),
             nn.ReLU(),
             nn.Linear(config.hidden_size, config.contrastive_proj_size)  # 128 for contrastive learning
         )
         
-        # 使用你的SupConLoss
+        # SupConLoss
         self.contrastive_loss = SupConLoss(temperature=0.07)
 
         # Initialize weights and apply final processing
@@ -93,7 +93,7 @@ class Wav2Vec2ForContrastiveLearning(Wav2Vec2PreTrainedModel):
         output_hidden_states: Optional[bool] = None,
         return_dict: Optional[bool] = None,
         labels: Optional[torch.Tensor] = None,
-        mode: str = "supervised_contrastive",  # 主要使用监督对比学习
+        mode: str = "supervised_contrastive",  # 
     ) -> Union[tuple, ContrastiveLearningOutput]:
         
         return_dict = return_dict if return_dict is not None else self.config.use_return_dict
@@ -108,23 +108,23 @@ class Wav2Vec2ForContrastiveLearning(Wav2Vec2PreTrainedModel):
 
         hidden_states = outputs[0]
 
-        # 平均池化
+        
         if attention_mask is not None:
-            # 计算特征向量的注意力掩码
+            
             attention_mask = self._get_feature_vector_attention_mask(hidden_states.shape[1], attention_mask)
             hidden_states = hidden_states * attention_mask.unsqueeze(-1)
             pooled_output = hidden_states.sum(dim=1) / attention_mask.sum(dim=1, keepdim=True)
         else:
             pooled_output = hidden_states.mean(dim=1)
 
-        # 投影到对比学习空间
+        
         embeddings = self.projector(pooled_output)
         
-        # 计算损失
+        
         loss = None
         if labels is not None:
             if mode == "supervised_contrastive":
-                # 为SupConLoss准备特征形状 [batch_size, 1, feature_dim]
+                #  [batch_size, 1, feature_dim]
                 features = embeddings.unsqueeze(1)
                 loss = self.contrastive_loss(features, labels)
             elif mode == "contrastive":
@@ -144,33 +144,31 @@ class Wav2Vec2ForContrastiveLearning(Wav2Vec2PreTrainedModel):
         )
 
     def _compute_simple_contrastive_loss(self, embeddings):
-        """
-        简化的标准对比损失，用于无标签情况
-        假设批次中的样本是成对的: [aug1, aug2, aug1, aug2, ...]
-        """
+
+
         batch_size = embeddings.shape[0]
         
         if batch_size % 2 != 0:
             raise ValueError("Batch size must be even for contrastive learning")
         
-        # 归一化嵌入
+       
         embeddings = nn.functional.normalize(embeddings, p=2, dim=1)
         
-        # 计算相似度矩阵
+        # similarity_matrix
         similarity_matrix = torch.matmul(embeddings, embeddings.T) / 0.07
         
-        # 创建标签：正样本对是 (2i, 2i+1) 和 (2i+1, 2i)
+        
         labels = torch.arange(batch_size, device=embeddings.device)
         labels = (labels // 2) * 2
-        labels = torch.cat([labels[1:], labels[:1]])  # 移位对齐正样本对
+        labels = torch.cat([labels[1:], labels[:1]])  
         
-        # 计算对比损失
+ 
         loss = nn.functional.cross_entropy(similarity_matrix, labels)
         
         return loss
 
     def _get_feature_vector_attention_mask(self, feature_vector_length, attention_mask):
-        """从官方代码复制的辅助方法"""
+
         non_padded_lengths = attention_mask.cumsum(dim=-1)[:, -1]
         output_lengths = self._get_feat_extract_output_lengths(non_padded_lengths)
         output_lengths = output_lengths.to(torch.long)
@@ -184,7 +182,7 @@ class Wav2Vec2ForContrastiveLearning(Wav2Vec2PreTrainedModel):
         return attention_mask
 
     def _get_feat_extract_output_lengths(self, input_lengths: torch.LongTensor):
-        """从官方代码复制的辅助方法"""
+
         def _conv_out_length(input_length, kernel_size, stride):
             return torch.div(input_length - kernel_size, stride, rounding_mode="floor") + 1
 

@@ -120,11 +120,11 @@ def main(config_path):
                 vectorized_datasets["train"] = vectorized_datasets["train"].add_column("language", [lan_config[idx]] * len(vectorized_datasets["train"]))
                 vectorized_datasets["eval"] = vectorized_datasets["eval"].add_column("language", [lan_config[idx]] * len(vectorized_datasets["eval"]))
             
-            # 把每次得到的vectorized_datasets合并到一起
+            
             all_train_datasets.append(vectorized_datasets["train"])
             all_eval_datasets.append(vectorized_datasets["eval"])
         
-        # 合并所有语言的数据集
+        
         from datasets import concatenate_datasets, DatasetDict
         vectorized_datasets = DatasetDict({
             "train": concatenate_datasets(all_train_datasets).shuffle(seed=42),
@@ -218,6 +218,6 @@ def main(config_path):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config", type=str, required=True, help="配置文件路径")
+    parser.add_argument("--config", type=str, required=True, help="path")
     args = parser.parse_args()
     main(args.config)

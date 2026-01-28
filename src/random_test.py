@@ -19,13 +19,13 @@ def load_config(config_path):
 def main(config_path):
     config = load_config(config_path)
     languages = {
-        'ro': 0,  # 英语 -> 标签0
-        'sl': 1,  # 法语 -> 标签2
-        'sr': 2,  # 德语 -> 标签4
-        # 添加你需要的其他语言...
+        'ro': 0,  
+        'sl': 1,  
+        'sr': 2,  
+        
         }
     training_args = TrainingArguments(**config.TRAINING_PARAMS)
-# 加载多语言数据集
+# 
     feature_extractor, model, model_config = load_model_for_classification(training_args, **config.MODEL_PARAMS)
     
     for name, param in model.named_parameters():
@@ -34,19 +34,19 @@ def main(config_path):
     
     raw_datasets = load_and_combine_multilingual_datasets(
         languages=languages,
-        max_train_sample=50,  # 每种语言250条训练数据
-        max_eval_sample=50,    # 每种语言50条验证数据
+        max_train_sample=50,  # 
+        max_eval_sample=50,    # 
         **config.DATASET_PARAMS
     )
 
-    # 预处理数据集（如果需要的话）
+   
     #raw_datasets = preprocess_datasets(raw_datasets, **config.DATASET_PARAMS)
 
-    # 向量化数据集 - 不再需要tokenizer
+    
 
     vectorized_datasets = vectorize_datasets_classification(
             raw_datasets, 
-            tokenizer=None,  # 传入None或者删除这个参数
+            tokenizer=None,  # 
             feature_extractor=feature_extractor, 
             **config.DATASET_PARAMS
         )
@@ -57,6 +57,6 @@ def main(config_path):
     trainer.train(resume_from_checkpoint=None)
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config", type=str, required=True, help="配置文件路径")
+    parser.add_argument("--config", type=str, required=True, help="path")
     args = parser.parse_args()
     main(args.config)

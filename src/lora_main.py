@@ -127,7 +127,7 @@ def main(config_path):
         new_tokens_list = get_new_tokens(config.new_vocab_path,tokenizer.get_vocab())
         num_added = tokenizer.add_tokens(new_tokens_list)
         new_vocab_size = len(tokenizer)  # 获取新的词汇表大小
-        print(f"添加了 {num_added} 个新token")
+        print(f"added {num_added} new token")
         #print(f"新词汇表大小: {new_vocab_size}")
         #resize_linear_layer(model.lm_head, model.config.vocab_size, new_vocab_size)
         model.resize_token_embeddings(new_vocab_size)
@@ -165,11 +165,11 @@ def main(config_path):
                 vectorized_datasets["train"] = vectorized_datasets["train"].add_column("language", [lan_config[idx]] * len(vectorized_datasets["train"]))
                 vectorized_datasets["eval"] = vectorized_datasets["eval"].add_column("language", [lan_config[idx]] * len(vectorized_datasets["eval"]))
             
-            # 把每次得到的vectorized_datasets合并到一起
+            # merge vectorized_datasets
             all_train_datasets.append(vectorized_datasets["train"])
             all_eval_datasets.append(vectorized_datasets["eval"])
         
-        # 合并所有语言的数据集
+        # merge
         from datasets import concatenate_datasets, DatasetDict
         vectorized_datasets = DatasetDict({
             "train": concatenate_datasets(all_train_datasets).shuffle(seed=42),
@@ -266,6 +266,6 @@ def main(config_path):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config", type=str, required=True, help="配置文件路径")
+    parser.add_argument("--config", type=str, required=True, help="path")
     args = parser.parse_args()
     main(args.config)

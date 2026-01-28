@@ -28,18 +28,18 @@ class MyWav2Vec2ForCTC(Wav2Vec2ForCTC):
         if new_num_tokens == old_num_tokens:
             return self.lm_head
         
-        # 创建新的线性层
+        # 
         new_lm_head = torch.nn.Linear(
             old_lm_head.in_features, 
             new_num_tokens, 
             bias=old_lm_head.bias is not None
         )
         
-        # 复制权重
+        #
         with torch.no_grad():
             if new_num_tokens > old_num_tokens:
                 new_lm_head.weight.data[:old_num_tokens] = old_lm_head.weight.data
-                # 新 token 随机初始化
+                # new token randomize
                 std_dev = 0.02
                 new_lm_head.weight.data[old_num_tokens:] = torch.randn(
                     new_num_tokens - old_num_tokens, old_lm_head.in_features
@@ -70,7 +70,7 @@ class MyWav2Vec2ForCTC(Wav2Vec2ForCTC):
         print(f"Old vocab size: {old_num_tokens}")
         print(f"New vocab size: {new_num_tokens}")
         
-        # 创建新的线性层
+        # new liner
         new_lm_head = torch.nn.Linear(
             old_lm_head.in_features, 
             new_num_tokens, 
@@ -79,9 +79,9 @@ class MyWav2Vec2ForCTC(Wav2Vec2ForCTC):
         
         print(f"New lm_head shape: {new_lm_head.weight.shape}")
         
-        # 完全重新初始化所有权重
+        # 
         with torch.no_grad():
-            # 所有token都重新初始化
+            # new initialize
             std_dev = 0.02
             new_lm_head.weight.data = torch.randn(
                 new_num_tokens, old_lm_head.in_features
@@ -162,16 +162,11 @@ class MultiLanguageEvaluationTrainer(Trainer):
                 # 累加样本数
                 total_samples += lang_samples
         
-        #print("--------------")
-        #print("简化后的指标:", all_lang_metrics)
-        #print("语言:", self.languages)
-        #print("总样本数:", total_samples)
-        #print("--------------")
+
         
-        # 计算加权平均指标
+
         weighted_metrics = self._compute_weighted_average(all_lang_metrics, self.languages, total_samples)
-        
-        # 合并所有指标
+
         final_metrics = {**weighted_metrics, **all_lang_metrics}
         return final_metrics
 
@@ -179,7 +174,7 @@ class MultiLanguageEvaluationTrainer(Trainer):
         """计算加权平均指标 - 使用简化后的名称"""
         weighted_metrics = {}
         
-        for metric in ['wer', 'loss']:  # 根据您实际有的指标调整
+        for metric in ['wer', 'loss']:  # 
             weighted_sum = 0
             valid_langs = 0
             
@@ -191,11 +186,11 @@ class MultiLanguageEvaluationTrainer(Trainer):
                     lang_value = lang_metrics[lang_metric_key]
                     lang_samples = lang_metrics[lang_samples_key]
                     
-                    # 加权累加
+                 
                     weighted_sum += lang_value * lang_samples
                     valid_langs += 1
             
-            # 计算加权平均
+            
             if valid_langs > 0 and total_samples > 0:
                 weighted_avg = weighted_sum / total_samples
                 weighted_metrics[metric] = weighted_avg
@@ -209,11 +204,11 @@ class MultiLanguageEvaluationTrainer(Trainer):
 
 
 def save_lora_adapter(trainer, adapter_path):
-    """保存LoRA适配器"""
+    """save lora"""
     trainer.model.save_pretrained(adapter_path)
 
 def load_lora_adapter(model, adapter_path):
-    """加载LoRA适配器到基础模型"""
+    """load lora"""
     
     model = PeftModel.from_pretrained(model, adapter_path)
     return model
@@ -221,23 +216,23 @@ def load_lora_adapter(model, adapter_path):
 
 
 def setup_lora_for_ctc(model, lora_config=None,adapter_checkpoint=None):
-    """为CTC模型设置LoRA配置"""
+    """lora setting"""
     
     if adapter_checkpoint != None:
         print("load adapter!")
         peft_model = load_lora_adapter(model,adapter_checkpoint)
         return peft_model
-    # 默认LoRA配置
+    # defalut lora
     if lora_config is None:
         lora_config = LoraConfig(
             inference_mode=False,
-            r=8,  # LoRA秩
+            r=8,  # LoRA rank
             lora_alpha=32,  # LoRA alpha
             lora_dropout=0.1,  # LoRA dropout
             target_modules=["k_proj", "v_proj", "q_proj", "out_proj"]  # 针对transformer层的投影层
         )
     
-    # 应用LoRA到模型
+    # apply lora
     peft_model = get_peft_model(model, lora_config)
     peft_model.print_trainable_parameters()
     peft_model.forward = model.forward
@@ -245,10 +240,10 @@ def setup_lora_for_ctc(model, lora_config=None,adapter_checkpoint=None):
 
 def create_lora_trainer(model, tokenizer, feature_extractor, dataset, training_args, eval_metrics, processor=None, lora_config=None,adapter_checkpoint=None):
     
-    # 设置LoRA
+    # set lora
     model = setup_lora_for_ctc(model, lora_config,adapter_checkpoint)
     
-    # 加载评估指标
+    # eval
     eval_metrics = {metric: evaluate.load(metric) for metric in eval_metrics}
 
     def preprocess_logits_for_metrics(logits, labels):
@@ -289,25 +284,25 @@ def create_lora_trainer(model, tokenizer, feature_extractor, dataset, training_a
 
 
 def resize_wav2vec2_ctc_vocab(model, new_vocab_size):
-    """调整Wav2Vec2ForCTC模型的词汇表大小"""
+    """change vocab size"""
     
-    print(f"调整Wav2Vec2 CTC模型词汇表: {model.config.vocab_size} -> {new_vocab_size}")
+    print(f"change Wav2Vec2 CTC vocab size: {model.config.vocab_size} -> {new_vocab_size}")
     
-    # 获取当前的lm_head
+    # current lm_head
     old_lm_head = model.lm_head
     
-    # 创建新的lm_head
+    # new lm_head
     new_lm_head = torch.nn.Linear(
         old_lm_head.in_features,
         new_vocab_size,
         bias=(old_lm_head.bias is not None)
     )
     
-    # 复制旧权重
+    # copy weight
     old_vocab_size = old_lm_head.out_features
     new_lm_head.weight.data[:old_vocab_size] = old_lm_head.weight.data
     
-    # 初始化新token的权重
+    # new init token weight
     if new_vocab_size > old_vocab_size:
         torch.nn.init.normal_(
             new_lm_head.weight.data[old_vocab_size:],
@@ -315,16 +310,16 @@ def resize_wav2vec2_ctc_vocab(model, new_vocab_size):
             std=0.02
         )
     
-    # 复制bias（如果有）
+    # copy bias
     if old_lm_head.bias is not None:
         new_lm_head.bias.data[:old_vocab_size] = old_lm_head.bias.data
         if new_vocab_size > old_vocab_size:
             new_lm_head.bias.data[old_vocab_size:].zero_()
     
-    # 替换lm_head
+    # replace lm_head
     model.lm_head = new_lm_head
     
-    # 更新config
+    # update config
     model.config.vocab_size = new_vocab_size
     
     print(f"✓ 词汇表扩展完成: {old_vocab_size} -> {new_vocab_size}")
@@ -340,28 +335,28 @@ def resize_linear_layer(layer, old_size, new_size):
         if new_size > old_size:
             print(f"扩展输出层: {old_size} -> {new_size}")
             
-            # 保存旧权重
+            # save old weight
             old_weight = layer.weight.data
             old_bias = layer.bias.data if layer.bias is not None else None
             
-            # 创建新层
+            # create new layer
             new_layer = nn.Linear(
                 layer.in_features, 
                 new_size, 
                 bias=layer.bias is not None
             )
             
-            # 复制旧权重
+            # copy old weight
             new_layer.weight.data[:old_size] = old_weight
             
-            # 初始化新权重（使用与原始模型相同的初始化策略）
+            # new init weight
             torch.nn.init.normal_(
                 new_layer.weight.data[old_size:], 
                 mean=0.0, 
-                std=0.02  # 常见初始化标准差
+                std=0.02  
             )
             
-            # 处理bias
+            # bias
             if old_bias is not None:
                 new_layer.bias.data[:old_size] = old_bias
                 new_layer.bias.data[old_size:].zero_()

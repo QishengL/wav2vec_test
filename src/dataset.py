@@ -45,7 +45,7 @@ def load_datasets(lan,max_train_sample=None,max_eval_sample=None,random=None,**c
     return raw_datasets
 
 def preprocess_datasets(raw_datasets, **config):
-    # 示例：清理字符
+
 
     chars_to_ignore = config["chars_to_ignore"]
     if chars_to_ignore:
@@ -65,7 +65,7 @@ def preprocess_datasets(raw_datasets, **config):
     return raw_datasets.map(remove_special_characters, desc="Clean text")
 
 def preprocess_datasets_phoneme(raw_datasets,lan, **config):
-    # 示例：清理字符
+
     backend = BACKENDS["espeak"](lan, language_switch="remove-flags")
     chars_to_ignore = config["chars_to_ignore"]
     if chars_to_ignore:
@@ -175,12 +175,12 @@ def vectorize_datasets_classification(raw_datasets, tokenizer, feature_extractor
         batch[feature_extractor_input_name] = getattr(inputs, feature_extractor_input_name)[0]
         batch["input_length"] = len(sample["array"].squeeze())
         
-        # 使用语言标签作为分类目标
+        
         batch["labels"] = batch["language_label"]
         
         return batch
 
-    # 处理数据集
+    
     vectorized_datasets = raw_datasets.map(
         prepare_dataset,
         remove_columns=[col for col in next(iter(raw_datasets.values())).column_names 
@@ -189,7 +189,7 @@ def vectorize_datasets_classification(raw_datasets, tokenizer, feature_extractor
         desc="preprocess datasets",
     )
 
-    # 过滤音频长度
+    
     def is_audio_in_length_range(length):
         return min_input_length < length < max_input_length
 
@@ -203,16 +203,8 @@ def vectorize_datasets_classification(raw_datasets, tokenizer, feature_extractor
 
 
 def load_and_combine_multilingual_datasets(languages, max_train_sample=None, max_eval_sample=None, random=None, **config):
-    """
-    加载并合并多语言数据集
     
-    Args:
-        languages: 字典，格式为 {'语言代码': 数字标签}，如 {'en': 0, 'zh': 1, 'fr': 2}
-        max_train_sample: 每种语言的训练集最大样本数
-        max_eval_sample: 每种语言的验证集最大样本数
-        random: 随机种子
-        config: 数据集配置参数
-    """
+    
     from datasets import concatenate_datasets
     
     combined_train = []
@@ -238,7 +230,7 @@ def load_and_combine_multilingual_datasets(languages, max_train_sample=None, max
             cache_dir=config["cache_dir"],
         )
         
-        # 采样
+        
         if max_train_sample is not None and max_train_sample < len(train_ds):
             if random is not None:
                 train_ds = train_ds.shuffle(seed=random)
@@ -247,10 +239,10 @@ def load_and_combine_multilingual_datasets(languages, max_train_sample=None, max
         if max_eval_sample is not None and max_eval_sample < len(eval_ds):
             eval_ds = eval_ds.select(range(max_eval_sample))
         
-        # 添加语言标签 - 使用数字标签
+        
         def add_language_label(example, language_code, language_label):
-            example["language_code"] = language_code  # 保留语言代码
-            example["language_label"] = language_label  # 数字标签
+            example["language_code"] = language_code  
+            example["language_label"] = language_label  
             return example
             
         train_ds = train_ds.map(lambda x: add_language_label(x, lang_code, lang_label))
@@ -261,11 +253,11 @@ def load_and_combine_multilingual_datasets(languages, max_train_sample=None, max
         
         print(f"Added {len(train_ds)} {lang_code} train samples, {len(eval_ds)} eval samples")
     
-    # 合并所有语言数据
+    
     final_train = concatenate_datasets(combined_train)
     final_eval = concatenate_datasets(combined_eval)
     
-    # 打乱顺序
+    
     if random is not None:
         final_train = final_train.shuffle(seed=random)
         final_eval = final_eval.shuffle(seed=random)
@@ -283,21 +275,21 @@ def load_and_combine_multilingual_datasets(languages, max_train_sample=None, max
 
 
 '''
-# 使用示例
+# example
 languages = {
-    'en': 0,  # 英语 -> 标签0
-    'zh': 1,  # 中文 -> 标签1  
-    'fr': 2,  # 法语 -> 标签2
-    'es': 3,  # 西班牙语 -> 标签3
-    'de': 4,  # 德语 -> 标签4
-    'ja': 5,  # 日语 -> 标签5
-    'ko': 6   # 韩语 -> 标签6
+    'en': 0,  
+    'zh': 1,  
+    'fr': 2,  
+    'es': 3,  
+    'de': 4,  
+    'ja': 5,  
+    'ko': 6   
 }
 
 multilingual_dataset = load_and_combine_multilingual_datasets(
     languages=languages,
-    max_train_sample=250,  # 每种语言250条训练数据
-    max_eval_sample=50,    # 每种语言50条验证数据  
+    max_train_sample=250,  # 
+    max_eval_sample=50,    #   
     random=42,
     **config.DATASET_PARAMS
 )
