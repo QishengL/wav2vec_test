@@ -1,0 +1,32 @@
+__pycache__/
+*.pyc
+*.pyo
+
+# Weights & checkpoints
+weights/
+checkpoints/
+*.pth
+*.pt
+*.bin
+
+# W&B
+wandb/
+src/wandb/
+
+# Results / test data
+results/
+test/
+german_test1/
+
+# Slurm logs
+slurm_config/out/
+
+# Generated plots
+*.png
+*.jpg
+*.jpeg
+
+# OS
+.DS_Store
+.vscode/
+.idea/

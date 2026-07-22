@@ -1,0 +1,117 @@
+[
+  {
+    "weights_dir": "cy_100-xlsr-tr53",
+    "target_lang": "cy",
+    "exp_name": "cy_tr53"
+  },
+  {
+    "weights_dir": "cy_100-xlsr-trbase",
+    "target_lang": "cy",
+    "exp_name": "cy_trbase"
+  },
+  {
+    "weights_dir": "cy_100-xlsr-ug53",
+    "target_lang": "cy",
+    "exp_name": "cy_ug53"
+  },
+  {
+    "weights_dir": "cy_100-xlsr-ugbase",
+    "target_lang": "cy",
+    "exp_name": "cy_ugbase"
+  },
+  {
+    "weights_dir": "da_100-xlsr-lv53",
+    "target_lang": "da",
+    "exp_name": "da_lv53"
+  },
+  {
+    "weights_dir": "da_100-xlsr-lvbase",
+    "target_lang": "da",
+    "exp_name": "da_lvbase"
+  },
+  {
+    "weights_dir": "da_100-xlsr-tr53",
+    "target_lang": "da",
+    "exp_name": "da_tr53"
+  },
+  {
+    "weights_dir": "da_100-xlsr-trbase",
+    "target_lang": "da",
+    "exp_name": "da_trbase"
+  },
+  {
+    "weights_dir": "gn_100-xlsr-cs53",
+    "target_lang": "gn",
+    "exp_name": "gn_cs53"
+  },
+  {
+    "weights_dir": "gn_100-xlsr-csbase",
+    "target_lang": "gn",
+    "exp_name": "gn_csbase"
+  },
+  {
+    "weights_dir": "gn_100-xlsr-direct53",
+    "target_lang": "gn",
+    "exp_name": "gn_direct53"
+  },
+  {
+    "weights_dir": "gn_100-xlsr-directbase",
+    "target_lang": "gn",
+    "exp_name": "gn_directbase"
+  },
+  {
+    "weights_dir": "gn_100-xlsr-eo53",
+    "target_lang": "gn",
+    "exp_name": "gn_eo53"
+  },
+  {
+    "weights_dir": "gn_100-xlsr-eobase",
+    "target_lang": "gn",
+    "exp_name": "gn_eobase"
+  },
+  {
+    "weights_dir": "gn_100-xlsr-it53",
+    "target_lang": "gn",
+    "exp_name": "gn_it53"
+  },
+  {
+    "weights_dir": "gn_100-xlsr-itbase",
+    "target_lang": "gn",
+    "exp_name": "gn_itbase"
+  },
+  {
+    "weights_dir": "gn_100-xlsr-ro53",
+    "target_lang": "gn",
+    "exp_name": "gn_ro53"
+  },
+  {
+    "weights_dir": "gn_100-xlsr-robase",
+    "target_lang": "gn",
+    "exp_name": "gn_robase"
+  },
+  {
+    "weights_dir": "gn_100-xlsr-sw53",
+    "target_lang": "gn",
+    "exp_name": "gn_sw53"
+  },
+  {
+    "weights_dir": "gn_100-xlsr-swbase",
+    "target_lang": "gn",
+    "exp_name": "gn_swbase"
+  },
+  {
+    "weights_dir": "he_100-xlsr-ar53",
+    "target_lang": "he",
+    "exp_name": "he_ar53"
+  },
+  {
+    "weights_dir": "he_100-xlsr-arbase",
+    "target_lang": "he",
+    "exp_name": "he_arbase"
+  },
+  {
+    "weights_dir": "he_100-xlsr-cs53",
+    "target_lang": "he",
+    "exp_name": "he_cs53"
+  }
+]

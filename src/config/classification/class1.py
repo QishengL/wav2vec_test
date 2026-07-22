@@ -1,9 +1,9 @@
 wandb_project = "wav2vec_classification"
 wandb_run = "class1"
 preprocessing_only = False
-train_samples = 1000
-eval_samples = 200
-lan_list=["ar","be","bn","cs","cy","de","en","es","fa","fr","hu","it","ja","ka","lt","lv","nl","pl","pt","ru","ro","sw","ta","th","tr"]
+train_samples = 2500
+eval_samples = 2000
+lan_list=["ar","be","bn","cs","cy","de","en","es","fa","fr","hu","hi","it","ja","ka","lt","lv","nl","pl","pt","ru","ro","sw","ta","th","tr"]
 TRAINING_PARAMS = {
     "output_dir": "/mnt/storage/qisheng/github/wav2vec_test/weights/classification/xlsr-300m_class1",
     "overwrite_output_dir":True,        

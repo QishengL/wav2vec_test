@@ -12,7 +12,7 @@ def load_tokenzier(phonemizer_lang,**model_config):
     vocab_dir = model_config.get("vocab_dir", output_dir)
     config = AutoConfig.from_pretrained(
         model_name,
-        #cache_dir=model_args.cache_dir,
+        cache_dir="/mnt/storage/ldl_linguistics/datasets",
         #token=None,
         trust_remote_code=True,
     )
@@ -29,6 +29,9 @@ def load_tokenzier(phonemizer_lang,**model_config):
     tokenizer_name_or_path = vocab_dir
     #print(tokenizer_name_or_path)
     if use_phoneme:
+        # eSpeak language code mapping
+        ESPEAK_MAP = {'fr': 'fr-fr', 'en': 'en-us', 'zh': 'cmn', 'yue': 'yue'}
+        phonemizer_lang = ESPEAK_MAP.get(phonemizer_lang, phonemizer_lang)
         print("phonewav!")
         tokenizer = Wav2Vec2PhonemeCTCTokenizer.from_pretrained(
                 tokenizer_name_or_path,
@@ -74,7 +77,7 @@ def load_model_and_tokenizer(training_args,**model_config):
 
     config = AutoConfig.from_pretrained(
         model_name,
-        #cache_dir=model_args.cache_dir,
+        cache_dir="/mnt/storage/ldl_linguistics/datasets",
         #token=None,
         trust_remote_code=True,
     )
@@ -109,7 +112,7 @@ def load_model_and_tokenizer(training_args,**model_config):
         )
     feature_extractor = AutoFeatureExtractor.from_pretrained(
         model_name,
-        #cache_dir=model_args.cache_dir,
+        cache_dir="/mnt/storage/ldl_linguistics/datasets",
         #token=data_args.token,
         trust_remote_code=True,
     )
@@ -141,7 +144,7 @@ def load_model_and_tokenizer(training_args,**model_config):
     # create model
     model = AutoModelForCTC.from_pretrained(
         model_name,
-        #cache_dir=model_args.cache_dir,
+        cache_dir="/mnt/storage/ldl_linguistics/datasets",
         config=config,
         #token=data_args.token,
         trust_remote_code=True,

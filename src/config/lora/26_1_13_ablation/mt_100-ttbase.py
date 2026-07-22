@@ -1,0 +1,74 @@
+# config_base.py
+#create_vocab = True
+wandb_project = "wav2vec_1_13"
+wandb_run = "mt_100-ttbase"
+preprocessing_only = False
+resume = False
+TRAINING_PARAMS = {
+    "output_dir": "../weights/mt_100-xlsr-ttbase", 
+    "overwrite_output_dir":True,        
+    "num_train_epochs": 900,                                    
+    "per_device_train_batch_size": 32,
+    "gradient_accumulation_steps": 1,
+    "learning_rate": 1e-5,
+    "lr_scheduler_type":"constant",  # Disables learning rate decay
+    "weight_decay":0.0,  # No weight decay
+    "warmup_steps":0,  # No learning rate warmup
+    "max_grad_norm": 1.5,
+    "save_steps": 800,                                         
+    "save_total_limit": 1,
+    "gradient_checkpointing": True,                              
+    "fp16": True,                                              
+    "group_by_length": True, 
+    "do_train": True, 
+    "do_eval":True, 
+    "report_to":"wandb",
+    "logging_strategy":"steps",         
+    "eval_strategy":"steps",
+    "eval_steps":800,                 # 每 1000 步评估一次
+    "logging_steps":50, 
+                             
+}
+MODEL_PARAMS = {
+    "output_dir": "../weights/mt_100-xlsr-ttbase", 
+    "model_name_or_path" : "/mnt/storage/qisheng/github/wav2vec_test/weights/tt_9000-xlsr-base_general_1e5/checkpoint-28000",
+    "word_delimiter_token": "|",
+    "unk_token": "[UNK]",
+    "pad_token": "[PAD]",
+    "feat_proj_dropout": 0.1,      # 增加正则化强度
+    "attention_dropout": 0.1,      # 提高注意力dropout
+    "hidden_dropout": 0.1,         # 提高隐藏层dropout
+    "final_dropout": 0.1,          # 输出层dropout
+    "mask_time_prob": 0.1,         # 更强的数据增强
+    "mask_time_length": 10,
+    "mask_feature_prob": 0.1,
+    "mask_feature_length": 10,
+    "layerdrop": 0.0,
+    "ctc_loss_reduction": "mean",
+    "ctc_zero_infinity": False,
+    "activation_dropout": 0.1,
+    "add_adapter": False,
+    "freeze_feature_encoder":True,
+    "use_phoneme":True,
+    #"phoneme_lang":"tr",
+    "vocab_dir":"/mnt/storage/qisheng/github/wav2vec_test/vocab_builder/vocab_folder/general_phoneme"
+}
+DATASET_PARAMS={
+    "dataset_name" : "fsicoli/common_voice_22_0",  
+    "dataset_config_name" : "mt",
+    "train_split" : "train+validation",
+    "test_split" : "test",
+    "chars_to_ignore" : [",", "?", ".", "!", "-", ";", ":", "\"", "“", "%", "‘", "”","�", "(", ")", "'"],
+    "text_column":'sentence',
+    "audio_column":'audio',
+    "max_train_samples_per_language":[100],
+    "max_eval_samples_per_language":[10000],
+    "max_train_samples":None,
+    "max_eval_samples":None,
+    "max_duration_in_seconds":20.0,
+    "min_duration_in_seconds":0.0,
+    "preprocessing_num_workers":1,
+    "eval_metrics" : ["wer"],
+    "cache_dir":"/mnt/storage/ldl_linguistics/datasets",
+
+}

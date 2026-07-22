@@ -1,0 +1,117 @@
+[
+  {
+    "weights_dir": "az_100-xlsr-directbase",
+    "target_lang": "az",
+    "exp_name": "az_directbase"
+  },
+  {
+    "weights_dir": "az_100-xlsr-eo53",
+    "target_lang": "az",
+    "exp_name": "az_eo53"
+  },
+  {
+    "weights_dir": "az_100-xlsr-eobase",
+    "target_lang": "az",
+    "exp_name": "az_eobase"
+  },
+  {
+    "weights_dir": "az_100-xlsr-lt53",
+    "target_lang": "az",
+    "exp_name": "az_lt53"
+  },
+  {
+    "weights_dir": "az_100-xlsr-ltbase",
+    "target_lang": "az",
+    "exp_name": "az_ltbase"
+  },
+  {
+    "weights_dir": "az_100-xlsr-tr53",
+    "target_lang": "az",
+    "exp_name": "az_tr53"
+  },
+  {
+    "weights_dir": "az_100-xlsr-trbase",
+    "target_lang": "az",
+    "exp_name": "az_trbase"
+  },
+  {
+    "weights_dir": "az_100-xlsr-ug53",
+    "target_lang": "az",
+    "exp_name": "az_ug53"
+  },
+  {
+    "weights_dir": "az_100-xlsr-ugbase",
+    "target_lang": "az",
+    "exp_name": "az_ugbase"
+  },
+  {
+    "weights_dir": "cy_100-xlsr-ar53",
+    "target_lang": "cy",
+    "exp_name": "cy_ar53"
+  },
+  {
+    "weights_dir": "cy_100-xlsr-arbase",
+    "target_lang": "cy",
+    "exp_name": "cy_arbase"
+  },
+  {
+    "weights_dir": "cy_100-xlsr-ba53",
+    "target_lang": "cy",
+    "exp_name": "cy_ba53"
+  },
+  {
+    "weights_dir": "cy_100-xlsr-babase",
+    "target_lang": "cy",
+    "exp_name": "cy_babase"
+  },
+  {
+    "weights_dir": "cy_100-xlsr-direct53",
+    "target_lang": "cy",
+    "exp_name": "cy_direct53"
+  },
+  {
+    "weights_dir": "cy_100-xlsr-directbase",
+    "target_lang": "cy",
+    "exp_name": "cy_directbase"
+  },
+  {
+    "weights_dir": "cy_100-xlsr-hu53",
+    "target_lang": "cy",
+    "exp_name": "cy_hu53"
+  },
+  {
+    "weights_dir": "cy_100-xlsr-hubase",
+    "target_lang": "cy",
+    "exp_name": "cy_hubase"
+  },
+  {
+    "weights_dir": "cy_100-xlsr-it53",
+    "target_lang": "cy",
+    "exp_name": "cy_it53"
+  },
+  {
+    "weights_dir": "cy_100-xlsr-itbase",
+    "target_lang": "cy",
+    "exp_name": "cy_itbase"
+  },
+  {
+    "weights_dir": "cy_100-xlsr-nl53",
+    "target_lang": "cy",
+    "exp_name": "cy_nl53"
+  },
+  {
+    "weights_dir": "cy_100-xlsr-nlbase",
+    "target_lang": "cy",
+    "exp_name": "cy_nlbase"
+  },
+  {
+    "weights_dir": "cy_100-xlsr-sw53",
+    "target_lang": "cy",
+    "exp_name": "cy_sw53"
+  },
+  {
+    "weights_dir": "cy_100-xlsr-swbase",
+    "target_lang": "cy",
+    "exp_name": "cy_swbase"
+  }
+]

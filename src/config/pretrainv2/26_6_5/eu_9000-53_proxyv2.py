@@ -1,0 +1,70 @@
+# config_53.py
+wandb_project = "wav2vec_proxyv2_s1"
+wandb_run = "eu_9000-53"
+espeak_config = "eu"
+preprocessing_only = False
+resume = False
+TRAINING_PARAMS = {
+    "output_dir": "../weights/eu_9000-xlsr-53_proxyv2", 
+    "overwrite_output_dir":True,        
+    "num_train_epochs": 50,                                    
+    "per_device_train_batch_size": 16,
+    "gradient_accumulation_steps": 1,
+    "learning_rate": 1e-5,
+    "lr_scheduler_type":"constant",
+    "weight_decay":0.0,
+    "warmup_steps":0,
+    "save_steps": 2000,                                                                    
+    "save_total_limit": 3,
+    "gradient_checkpointing": True,                              
+    "fp16": True,                                              
+    "group_by_length": True, 
+    "do_train": True, 
+    "do_eval":True, 
+    "report_to":"wandb",
+    "logging_strategy":"steps",         
+    "eval_strategy":"steps",
+    "eval_steps":2000,
+    "logging_steps":50,                             
+}
+MODEL_PARAMS = {
+    "output_dir": "../weights/eu_9000-xlsr-53_proxyv2", 
+    "model_name_or_path" : "facebook/wav2vec2-large-xlsr-53",
+    "word_delimiter_token": "|",
+    "unk_token": "[UNK]",
+    "pad_token": "[PAD]",
+    "feat_proj_dropout": 0.1,
+    "attention_dropout": 0.1,
+    "hidden_dropout": 0.1,
+    "final_dropout": 0.1,
+    "mask_time_prob": 0.1,
+    "mask_time_length": 10,
+    "mask_feature_prob": 0.1,
+    "mask_feature_length": 10,
+    "layerdrop": 0.0,
+    "ctc_loss_reduction": "mean",
+    "ctc_zero_infinity": False,
+    "activation_dropout": 0.1,
+    "add_adapter": False,
+    "freeze_feature_encoder":True,
+    "use_phoneme":True,
+    "vocab_dir":"/mnt/storage/qisheng/github/wav2vec_test/vocab_builder/vocab_folder/general_phoneme"
+}
+DATASET_PARAMS={
+    "dataset_name" : "fsicoli/common_voice_22_0",  
+    "dataset_config_name" : "eu",
+    "train_split" : "train+validation",
+    "test_split" : "test",
+        "chars_to_ignore" : [',', '?', '.', '!', '-', ';', ':', '"', '“', '%', '‘', '”', '�', '(', ')', "'"],
+    "text_column":'sentence',
+    "audio_column":'audio',
+    "max_train_samples_per_language":[9000],
+    "max_eval_samples_per_language":[10000],
+    "max_train_samples":None,
+    "max_eval_samples":None,
+    "max_duration_in_seconds":20.0,
+    "min_duration_in_seconds":0.0,
+    "preprocessing_num_workers":1,
+    "eval_metrics" : ["wer"],
+    "cache_dir":"/mnt/storage/ldl_linguistics/datasets",
+}

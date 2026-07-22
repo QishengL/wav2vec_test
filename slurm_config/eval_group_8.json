@@ -1,0 +1,87 @@
+[
+  {
+    "weights_dir": "ur_100-xlsr-trbase",
+    "target_lang": "ur",
+    "exp_name": "ur_trbase"
+  },
+  {
+    "weights_dir": "af_100-xlsr-direct53",
+    "target_lang": "af",
+    "exp_name": "af_direct53"
+  },
+  {
+    "weights_dir": "af_100-xlsr-directbase",
+    "target_lang": "af",
+    "exp_name": "af_directbase"
+  },
+  {
+    "weights_dir": "da_100-xlsr-direct53",
+    "target_lang": "da",
+    "exp_name": "da_direct53"
+  },
+  {
+    "weights_dir": "da_100-xlsr-directbase",
+    "target_lang": "da",
+    "exp_name": "da_directbase"
+  },
+  {
+    "weights_dir": "id_100-xlsr-direct53",
+    "target_lang": "id",
+    "exp_name": "id_direct53"
+  },
+  {
+    "weights_dir": "id_100-xlsr-directbase",
+    "target_lang": "id",
+    "exp_name": "id_directbase"
+  },
+  {
+    "weights_dir": "kk_100-xlsr-direct53",
+    "target_lang": "kk",
+    "exp_name": "kk_direct53"
+  },
+  {
+    "weights_dir": "kk_100-xlsr-directbase",
+    "target_lang": "kk",
+    "exp_name": "kk_directbase"
+  },
+  {
+    "weights_dir": "ky_100-xlsr-direct53",
+    "target_lang": "ky",
+    "exp_name": "ky_direct53"
+  },
+  {
+    "weights_dir": "ky_100-xlsr-directbase",
+    "target_lang": "ky",
+    "exp_name": "ky_directbase"
+  },
+  {
+    "weights_dir": "mt_100-xlsr-direct53",
+    "target_lang": "mt",
+    "exp_name": "mt_direct53"
+  },
+  {
+    "weights_dir": "mt_100-xlsr-directbase",
+    "target_lang": "mt",
+    "exp_name": "mt_directbase"
+  },
+  {
+    "weights_dir": "sk_100-xlsr-direct53",
+    "target_lang": "sk",
+    "exp_name": "sk_direct53"
+  },
+  {
+    "weights_dir": "sk_100-xlsr-directbase",
+    "target_lang": "sk",
+    "exp_name": "sk_directbase"
+  },
+  {
+    "weights_dir": "tk_100-xlsr-direct53",
+    "target_lang": "tk",
+    "exp_name": "tk_direct53"
+  },
+  {
+    "weights_dir": "tk_100-xlsr-directbase",
+    "target_lang": "tk",
+    "exp_name": "tk_directbase"
+  }
+]

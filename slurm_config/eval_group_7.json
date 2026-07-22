@@ -1,0 +1,117 @@
+[
+  {
+    "weights_dir": "tn_100-xlsr-hu53",
+    "target_lang": "tn",
+    "exp_name": "tn_hu53"
+  },
+  {
+    "weights_dir": "tn_100-xlsr-hubase",
+    "target_lang": "tn",
+    "exp_name": "tn_hubase"
+  },
+  {
+    "weights_dir": "tn_100-xlsr-lt53",
+    "target_lang": "tn",
+    "exp_name": "tn_lt53"
+  },
+  {
+    "weights_dir": "tn_100-xlsr-ltbase",
+    "target_lang": "tn",
+    "exp_name": "tn_ltbase"
+  },
+  {
+    "weights_dir": "tn_100-xlsr-sw53",
+    "target_lang": "tn",
+    "exp_name": "tn_sw53"
+  },
+  {
+    "weights_dir": "tn_100-xlsr-swbase",
+    "target_lang": "tn",
+    "exp_name": "tn_swbase"
+  },
+  {
+    "weights_dir": "ur_100-xlsr-ar53",
+    "target_lang": "ur",
+    "exp_name": "ur_ar53"
+  },
+  {
+    "weights_dir": "ur_100-xlsr-arbase",
+    "target_lang": "ur",
+    "exp_name": "ur_arbase"
+  },
+  {
+    "weights_dir": "ur_100-xlsr-cs53",
+    "target_lang": "ur",
+    "exp_name": "ur_cs53"
+  },
+  {
+    "weights_dir": "ur_100-xlsr-csbase",
+    "target_lang": "ur",
+    "exp_name": "ur_csbase"
+  },
+  {
+    "weights_dir": "ur_100-xlsr-direct53",
+    "target_lang": "ur",
+    "exp_name": "ur_direct53"
+  },
+  {
+    "weights_dir": "ur_100-xlsr-directbase",
+    "target_lang": "ur",
+    "exp_name": "ur_directbase"
+  },
+  {
+    "weights_dir": "ur_100-xlsr-en53",
+    "target_lang": "ur",
+    "exp_name": "ur_en53"
+  },
+  {
+    "weights_dir": "ur_100-xlsr-enbase",
+    "target_lang": "ur",
+    "exp_name": "ur_enbase"
+  },
+  {
+    "weights_dir": "ur_100-xlsr-lv53",
+    "target_lang": "ur",
+    "exp_name": "ur_lv53"
+  },
+  {
+    "weights_dir": "ur_100-xlsr-lvbase",
+    "target_lang": "ur",
+    "exp_name": "ur_lvbase"
+  },
+  {
+    "weights_dir": "ur_100-xlsr-nl53",
+    "target_lang": "ur",
+    "exp_name": "ur_nl53"
+  },
+  {
+    "weights_dir": "ur_100-xlsr-nlbase",
+    "target_lang": "ur",
+    "exp_name": "ur_nlbase"
+  },
+  {
+    "weights_dir": "ur_100-xlsr-ro53",
+    "target_lang": "ur",
+    "exp_name": "ur_ro53"
+  },
+  {
+    "weights_dir": "ur_100-xlsr-robase",
+    "target_lang": "ur",
+    "exp_name": "ur_robase"
+  },
+  {
+    "weights_dir": "ur_100-xlsr-ta53",
+    "target_lang": "ur",
+    "exp_name": "ur_ta53"
+  },
+  {
+    "weights_dir": "ur_100-xlsr-tabase",
+    "target_lang": "ur",
+    "exp_name": "ur_tabase"
+  },
+  {
+    "weights_dir": "ur_100-xlsr-tr53",
+    "target_lang": "ur",
+    "exp_name": "ur_tr53"
+  }
+]

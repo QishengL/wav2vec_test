@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=uk_ru_pl
-#SBATCH --output=/mnt/storage/qisheng/github/wav2vec_test/slurm_config/out/uk_ru.out
-#SBATCH --error=/mnt/storage/qisheng/github/wav2vec_test/slurm_config/out/uk_ru.err
+#SBATCH --output=/mnt/storage/qisheng/github/wav2vec_test/slurm_config/out/uk_ru_pl.out
+#SBATCH --error=/mnt/storage/qisheng/github/wav2vec_test/slurm_config/out/uk_ru_pl.err
 #SBATCH --time=48:00:00
 #SBATCH --mem=32G
 #SBATCH --partition=compute

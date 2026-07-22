@@ -1,0 +1,117 @@
+[
+  {
+    "weights_dir": "id_100-xlsr-it53",
+    "target_lang": "id",
+    "exp_name": "id_it53"
+  },
+  {
+    "weights_dir": "id_100-xlsr-itbase",
+    "target_lang": "id",
+    "exp_name": "id_itbase"
+  },
+  {
+    "weights_dir": "ky_100-xlsr-tt53",
+    "target_lang": "ky",
+    "exp_name": "ky_tt53"
+  },
+  {
+    "weights_dir": "ky_100-xlsr-ttbase",
+    "target_lang": "ky",
+    "exp_name": "ky_ttbase"
+  },
+  {
+    "weights_dir": "ltg_100-xlsr-direct53",
+    "target_lang": "ltg",
+    "exp_name": "ltg_direct53"
+  },
+  {
+    "weights_dir": "ltg_100-xlsr-directbase",
+    "target_lang": "ltg",
+    "exp_name": "ltg_directbase"
+  },
+  {
+    "weights_dir": "ltg_100-xlsr-lt53",
+    "target_lang": "ltg",
+    "exp_name": "ltg_lt53"
+  },
+  {
+    "weights_dir": "ltg_100-xlsr-ltbase",
+    "target_lang": "ltg",
+    "exp_name": "ltg_ltbase"
+  },
+  {
+    "weights_dir": "ltg_100-xlsr-lv53",
+    "target_lang": "ltg",
+    "exp_name": "ltg_lv53"
+  },
+  {
+    "weights_dir": "ltg_100-xlsr-lvbase",
+    "target_lang": "ltg",
+    "exp_name": "ltg_lvbase"
+  },
+  {
+    "weights_dir": "ltg_100-xlsr-ru53",
+    "target_lang": "ltg",
+    "exp_name": "ltg_ru53"
+  },
+  {
+    "weights_dir": "ltg_100-xlsr-rubase",
+    "target_lang": "ltg",
+    "exp_name": "ltg_rubase"
+  },
+  {
+    "weights_dir": "ltg_100-xlsr-tr53",
+    "target_lang": "ltg",
+    "exp_name": "ltg_tr53"
+  },
+  {
+    "weights_dir": "ltg_100-xlsr-trbase",
+    "target_lang": "ltg",
+    "exp_name": "ltg_trbase"
+  },
+  {
+    "weights_dir": "mt_100-xlsr-cs53",
+    "target_lang": "mt",
+    "exp_name": "mt_cs53"
+  },
+  {
+    "weights_dir": "mt_100-xlsr-csbase",
+    "target_lang": "mt",
+    "exp_name": "mt_csbase"
+  },
+  {
+    "weights_dir": "mt_100-xlsr-ro53",
+    "target_lang": "mt",
+    "exp_name": "mt_ro53"
+  },
+  {
+    "weights_dir": "mt_100-xlsr-robase",
+    "target_lang": "mt",
+    "exp_name": "mt_robase"
+  },
+  {
+    "weights_dir": "mt_100-xlsr-tr53",
+    "target_lang": "mt",
+    "exp_name": "mt_tr53"
+  },
+  {
+    "weights_dir": "mt_100-xlsr-trbase",
+    "target_lang": "mt",
+    "exp_name": "mt_trbase"
+  },
+  {
+    "weights_dir": "sq_100-xlsr-ca53",
+    "target_lang": "sq",
+    "exp_name": "sq_ca53"
+  },
+  {
+    "weights_dir": "sq_100-xlsr-cabase",
+    "target_lang": "sq",
+    "exp_name": "sq_cabase"
+  },
+  {
+    "weights_dir": "sq_100-xlsr-cs53",
+    "target_lang": "sq",
+    "exp_name": "sq_cs53"
+  }
+]

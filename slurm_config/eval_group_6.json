@@ -1,0 +1,117 @@
+[
+  {
+    "weights_dir": "sq_100-xlsr-csbase",
+    "target_lang": "sq",
+    "exp_name": "sq_csbase"
+  },
+  {
+    "weights_dir": "sq_100-xlsr-direct53",
+    "target_lang": "sq",
+    "exp_name": "sq_direct53"
+  },
+  {
+    "weights_dir": "sq_100-xlsr-directbase",
+    "target_lang": "sq",
+    "exp_name": "sq_directbase"
+  },
+  {
+    "weights_dir": "sq_100-xlsr-eo53",
+    "target_lang": "sq",
+    "exp_name": "sq_eo53"
+  },
+  {
+    "weights_dir": "sq_100-xlsr-eobase",
+    "target_lang": "sq",
+    "exp_name": "sq_eobase"
+  },
+  {
+    "weights_dir": "sq_100-xlsr-it53",
+    "target_lang": "sq",
+    "exp_name": "sq_it53"
+  },
+  {
+    "weights_dir": "sq_100-xlsr-itbase",
+    "target_lang": "sq",
+    "exp_name": "sq_itbase"
+  },
+  {
+    "weights_dir": "sq_100-xlsr-lt53",
+    "target_lang": "sq",
+    "exp_name": "sq_lt53"
+  },
+  {
+    "weights_dir": "sq_100-xlsr-ltbase",
+    "target_lang": "sq",
+    "exp_name": "sq_ltbase"
+  },
+  {
+    "weights_dir": "sq_100-xlsr-lv53",
+    "target_lang": "sq",
+    "exp_name": "sq_lv53"
+  },
+  {
+    "weights_dir": "sq_100-xlsr-lvbase",
+    "target_lang": "sq",
+    "exp_name": "sq_lvbase"
+  },
+  {
+    "weights_dir": "sq_100-xlsr-nl53",
+    "target_lang": "sq",
+    "exp_name": "sq_nl53"
+  },
+  {
+    "weights_dir": "sq_100-xlsr-nlbase",
+    "target_lang": "sq",
+    "exp_name": "sq_nlbase"
+  },
+  {
+    "weights_dir": "sq_100-xlsr-ro53",
+    "target_lang": "sq",
+    "exp_name": "sq_ro53"
+  },
+  {
+    "weights_dir": "sq_100-xlsr-robase",
+    "target_lang": "sq",
+    "exp_name": "sq_robase"
+  },
+  {
+    "weights_dir": "sq_100-xlsr-tr53",
+    "target_lang": "sq",
+    "exp_name": "sq_tr53"
+  },
+  {
+    "weights_dir": "sq_100-xlsr-trbase",
+    "target_lang": "sq",
+    "exp_name": "sq_trbase"
+  },
+  {
+    "weights_dir": "tk_100-xlsr-tt53",
+    "target_lang": "tk",
+    "exp_name": "tk_tt53"
+  },
+  {
+    "weights_dir": "tk_100-xlsr-ttbase",
+    "target_lang": "tk",
+    "exp_name": "tk_ttbase"
+  },
+  {
+    "weights_dir": "tn_100-xlsr-direct53",
+    "target_lang": "tn",
+    "exp_name": "tn_direct53"
+  },
+  {
+    "weights_dir": "tn_100-xlsr-directbase",
+    "target_lang": "tn",
+    "exp_name": "tn_directbase"
+  },
+  {
+    "weights_dir": "tn_100-xlsr-eo53",
+    "target_lang": "tn",
+    "exp_name": "tn_eo53"
+  },
+  {
+    "weights_dir": "tn_100-xlsr-eobase",
+    "target_lang": "tn",
+    "exp_name": "tn_eobase"
+  }
+]

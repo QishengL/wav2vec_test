@@ -1,0 +1,117 @@
+[
+  {
+    "weights_dir": "af_100-xlsr-tr53",
+    "target_lang": "af",
+    "exp_name": "af_tr53"
+  },
+  {
+    "weights_dir": "af_100-xlsr-trbase",
+    "target_lang": "af",
+    "exp_name": "af_trbase"
+  },
+  {
+    "weights_dir": "am_100-xlsr-ar53",
+    "target_lang": "am",
+    "exp_name": "am_ar53"
+  },
+  {
+    "weights_dir": "am_100-xlsr-arbase",
+    "target_lang": "am",
+    "exp_name": "am_arbase"
+  },
+  {
+    "weights_dir": "am_100-xlsr-ba53",
+    "target_lang": "am",
+    "exp_name": "am_ba53"
+  },
+  {
+    "weights_dir": "am_100-xlsr-babase",
+    "target_lang": "am",
+    "exp_name": "am_babase"
+  },
+  {
+    "weights_dir": "am_100-xlsr-ca53",
+    "target_lang": "am",
+    "exp_name": "am_ca53"
+  },
+  {
+    "weights_dir": "am_100-xlsr-cabase",
+    "target_lang": "am",
+    "exp_name": "am_cabase"
+  },
+  {
+    "weights_dir": "am_100-xlsr-direct53",
+    "target_lang": "am",
+    "exp_name": "am_direct53"
+  },
+  {
+    "weights_dir": "am_100-xlsr-directbase",
+    "target_lang": "am",
+    "exp_name": "am_directbase"
+  },
+  {
+    "weights_dir": "am_100-xlsr-eo53",
+    "target_lang": "am",
+    "exp_name": "am_eo53"
+  },
+  {
+    "weights_dir": "am_100-xlsr-eobase",
+    "target_lang": "am",
+    "exp_name": "am_eobase"
+  },
+  {
+    "weights_dir": "am_100-xlsr-hu53",
+    "target_lang": "am",
+    "exp_name": "am_hu53"
+  },
+  {
+    "weights_dir": "am_100-xlsr-hubase",
+    "target_lang": "am",
+    "exp_name": "am_hubase"
+  },
+  {
+    "weights_dir": "am_100-xlsr-it53",
+    "target_lang": "am",
+    "exp_name": "am_it53"
+  },
+  {
+    "weights_dir": "am_100-xlsr-itbase",
+    "target_lang": "am",
+    "exp_name": "am_itbase"
+  },
+  {
+    "weights_dir": "am_100-xlsr-sw53",
+    "target_lang": "am",
+    "exp_name": "am_sw53"
+  },
+  {
+    "weights_dir": "am_100-xlsr-swbase",
+    "target_lang": "am",
+    "exp_name": "am_swbase"
+  },
+  {
+    "weights_dir": "am_100-xlsr-ta53",
+    "target_lang": "am",
+    "exp_name": "am_ta53"
+  },
+  {
+    "weights_dir": "am_100-xlsr-tabase",
+    "target_lang": "am",
+    "exp_name": "am_tabase"
+  },
+  {
+    "weights_dir": "az_100-xlsr-ba53",
+    "target_lang": "az",
+    "exp_name": "az_ba53"
+  },
+  {
+    "weights_dir": "az_100-xlsr-babase",
+    "target_lang": "az",
+    "exp_name": "az_babase"
+  },
+  {
+    "weights_dir": "az_100-xlsr-direct53",
+    "target_lang": "az",
+    "exp_name": "az_direct53"
+  }
+]

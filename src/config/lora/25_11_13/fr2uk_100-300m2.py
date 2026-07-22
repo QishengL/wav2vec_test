@@ -2,13 +2,13 @@
 #create_vocab = True
 general = True
 wandb_project = "wav2vec_300m_lora_11_13"
-wandb_run = "bg2uk_100v2"
-checkpoint = "/mnt/storage/qisheng/github/wav2vec_test/weights/bg_9000-xlsr-300m_general/checkpoint-20000"
+wandb_run = "fr2uk_100v2"
+checkpoint = "/mnt/storage/qisheng/github/wav2vec_test/weights/fr_9000-xlsr-300m_general/checkpoint-20000"
 new_vocab_path = "/mnt/storage/qisheng/github/wav2vec_test/vocab_builder/vocab_folder/cv_uk_phoneme"
 preprocessing_only = False
 resume = False
 TRAINING_PARAMS = {
-    "output_dir": "../weights/lora/bg2uk_100-xlsr-300m_general", 
+    "output_dir": "../weights/lora/fr2uk_100-xlsr-300m_general", 
     "overwrite_output_dir":True,        
     "num_train_epochs": 2000,                                    
     "per_device_train_batch_size": 16,
@@ -31,7 +31,7 @@ TRAINING_PARAMS = {
                              
 }
 MODEL_PARAMS = {
-    "output_dir": "../weights/lora/bg2uk_100-xlsr-300m_general", 
+    "output_dir": "../weights/lora/fr2uk_100-xlsr-300m_general", 
     "model_name_or_path" : "facebook/wav2vec2-xls-r-300m",
     "word_delimiter_token": "|",
     "unk_token": "[UNK]",
